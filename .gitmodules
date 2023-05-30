@@ -1,0 +1,3 @@
+[submodule "Assets/Core"]
+	path = Assets/Core
+	url = https://github.com/dm-prokopenko-w/Core
