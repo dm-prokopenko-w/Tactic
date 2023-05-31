@@ -76,3 +76,4 @@ Assets/Firebase
 Assets/Plugins/tvOS/Firebase
 Assets/Plugins/iOS/Firebase
 *.meta
+.idea
