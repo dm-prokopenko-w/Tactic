@@ -1,30 +1,30 @@
 using System;
-using System.Collections.Generic;
 using Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
-using Random = UnityEngine.Random;
 
 public class GameplayController : MonoInstaller
 {
     [Inject] private ControlModule _control;
     [Inject] private ObjectPoolModule _poolModule;
 
-    [SerializeField] private List<Base> _bases = new List<Base>();
-    [SerializeField] private List<Base> _selectedBases = new List<Base>();
     [SerializeField] private GameObject _unitPrefab;
 
+    public Action OnUpdateBases;
+    
     private Vector2 _lastPos;
-    private Squad _currentSquad = Squad.None;
+    private BasesController _basesController;
 
     public override void InstallBindings()
     {
         Container.Bind<GameplayController>().FromInstance(this).AsSingle().NonLazy();
     }
 
-    private void Start()
+    private void Awake()
     {
+        _basesController = new BasesController(_unitPrefab, _poolModule);
+        
         _control.TouchStart += TouchStart;
         _control.TouchEnd += TouchEnd;
         _control.TouchMoved += TouchMoved;
@@ -37,7 +37,7 @@ public class GameplayController : MonoInstaller
         _control.TouchMoved -= TouchMoved;
     }
 
-    public void AddBase(Base b) => _bases.Add(b);
+    public void AddBase(Base b) => _basesController.AddedNewBase(b);
 
     private void TouchStart(PointerEventData eventData)
     {
@@ -45,63 +45,26 @@ public class GameplayController : MonoInstaller
 
     private void TouchMoved(PointerEventData eventData)
     {
-        AddedBases(eventData);
+        ThrowRay(eventData, _basesController.AddedBases);
     }
 
     private void TouchEnd(PointerEventData eventData)
     {
-        Ray ray = Camera.main.ScreenPointToRay(eventData.position);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 100.0f);
-        if (hit != null && hit.collider != null)
-        {
-            var b = _bases.Find(x => x.GetRigidbody() == hit.rigidbody);
-            CreateUnits(b.transform, b);
-        }
+        ThrowRay(eventData, _basesController.CreateUnits);
     }
 
-    private void AddedBases(PointerEventData eventData)
+    private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D> method)
     {
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 100.0f);
         if (hit != null && hit.collider != null)
         {
-            var b = _bases.Find(x => x.GetRigidbody() == hit.rigidbody);
-            if (_selectedBases.Count == 0 && _currentSquad == Squad.None)
-            {
-                _currentSquad = b.SquadItem;
-            }
-
-            if (_selectedBases.Contains(b)
-                || b == null
-                || !_currentSquad.ToString().Equals(b.SquadItem.ToString()))
-            {
-                return;
-            }
-
-            _selectedBases.Add(b);
+            method?.Invoke(hit);
         }
     }
 
-    private void CreateUnits(Transform target, Base targetBase)
+    private void Update()
     {
-        foreach (var b in _selectedBases)
-        {
-            int count = b.GetCountUnits();
-            for (int i = 0; i < count; i++)
-            {
-                var p = b.transform.position + new Vector3(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f));
-                var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, b.transform);
-                var onTarget = new Action(() =>
-                {
-                    _poolModule.Despawn(unit);
-                    unit.transform.SetParent(target);
-                    targetBase.AddedUnit(1);
-                });
-                unit.GetComponent<Unit>().SetTarget(target, b.SquadItem, onTarget);
-            }
-        }
-
-        _currentSquad = Squad.None;
-        _selectedBases.Clear();
+        _basesController.UpdateUnits(OnUpdateBases);
     }
 }

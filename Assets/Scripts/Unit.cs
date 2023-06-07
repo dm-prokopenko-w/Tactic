@@ -1,36 +1,35 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : Item
+public class Unit : ItemView
 {
     [SerializeField] private CircleCollider2D _collider;
     [SerializeField] private Rigidbody2D _rb;
-    private Collider2D _col;
+    private Collider2D _startCol;
     private Transform _target;
-    private float _speed = 0.001f;
+    private float _speed =  5f;
 
-    private List<Collider2D> _selectedBases;
-    private Action _onTarget;
+    private Action<Collider2D> _onTarget;
     
-    public void SetTarget(Transform target, Squad squad, Action onTarget)
+    public void SetTarget(Transform target, Base startBase, Action<Collider2D> onTarget)
     {
-        SquadItem = squad;
+        SquadItem = startBase.SquadItem;
+        _startCol = startBase.GetCollider();
         _target = target;
         _onTarget = onTarget;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        var item = col.GetComponent<Item>();
-        if (item != null && !SquadItem.ToString().Equals(item.SquadItem.ToString()))
+        var item = col.GetComponent<ItemView>();
+        if (item != null && _startCol != col)
         {
-            _onTarget?.Invoke();
+            _onTarget?.Invoke(col);
         }
     }
 
     private void Update()
     {
-        transform.Translate(_target.position * _speed);
+        transform.position = Vector3.MoveTowards(transform.position, _target.position, Time.deltaTime * _speed);
     }
 }

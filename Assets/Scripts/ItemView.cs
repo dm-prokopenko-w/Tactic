@@ -8,7 +8,8 @@ public enum Squad
     GreenRed   
 }
 
-public abstract  class Item : MonoBehaviour
+public abstract  class ItemView : MonoBehaviour
 {
+    public string Id;
     public Squad SquadItem;
 }
