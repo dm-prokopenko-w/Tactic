@@ -5,31 +5,40 @@ public class Unit : ItemView
 {
     [SerializeField] private CircleCollider2D _collider;
     [SerializeField] private Rigidbody2D _rb;
-    private Collider2D _startCol;
-    private Transform _target;
-    private float _speed =  5f;
 
-    private Action<Collider2D> _onTarget;
-    
-    public void SetTarget(Transform target, Base startBase, Action<Collider2D> onTarget)
+    protected TypeItemView _type => TypeItemView.Unit;
+
+    private Collider2D _startCol;
+    private Base _targetBase;
+    private Vector3 _target;
+    private float _speed = 5f;
+    private Action<Collider2D, Collider2D> _onTrigger;
+
+    public void SetTarget(Base target, Base startBase, Action<Collider2D, Collider2D> onTrigger)
     {
         SquadItem = startBase.SquadItem;
+        _targetBase = target;
+        _target = target.transform.position;
+        _onTrigger = onTrigger;
         _startCol = startBase.GetCollider();
-        _target = target;
-        _onTarget = onTarget;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        var item = col.GetComponent<ItemView>();
-        if (item != null && _startCol != col)
+        if (col != _startCol)
         {
-            _onTarget?.Invoke(col);
+            _onTrigger?.Invoke(_collider, col);
         }
     }
 
+    public override TypeItemView GetTypeItemView() => _type;
+    public override string GetTargetId() => _targetBase.Id;
+
+    public Collider2D GetCollider() => _collider;
+    public Base GetTargetBase() => _targetBase;
+
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _target.position, Time.deltaTime * _speed);
+        transform.position = Vector3.MoveTowards(transform.position, _target, Time.deltaTime * _speed);
     }
 }

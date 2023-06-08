@@ -1,30 +1,31 @@
 using System;
+using System.Collections.Generic;
 using Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-public class GameplayController : MonoInstaller
+public class GamefieldController : MonoInstaller
 {
     [Inject] private ControlModule _control;
     [Inject] private ObjectPoolModule _poolModule;
 
+    [SerializeField] private List<GameplayData> _data;
     [SerializeField] private GameObject _unitPrefab;
+    [SerializeField] private Transform _parent;
 
-    public Action OnUpdateBases;
+    private GameplayManager _gameplay;
     
-    private Vector2 _lastPos;
-    private BasesController _basesController;
+    public Action OnUpdateBases;
 
-    public override void InstallBindings()
-    {
-        Container.Bind<GameplayController>().FromInstance(this).AsSingle().NonLazy();
-    }
+    private Vector2 _lastPos;
+
+    public override void InstallBindings() =>
+        Container.Bind<GamefieldController>().FromInstance(this).AsSingle().NonLazy();
 
     private void Awake()
     {
-        _basesController = new BasesController(_unitPrefab, _poolModule);
-        
+        _gameplay = new GameplayManager(_data, _unitPrefab, _poolModule, _parent);
         _control.TouchStart += TouchStart;
         _control.TouchEnd += TouchEnd;
         _control.TouchMoved += TouchMoved;
@@ -32,12 +33,13 @@ public class GameplayController : MonoInstaller
 
     private void OnDestroy()
     {
+        _gameplay.Unsubscribe();
         _control.TouchStart -= TouchStart;
         _control.TouchEnd -= TouchEnd;
         _control.TouchMoved -= TouchMoved;
     }
 
-    public void AddBase(Base b) => _basesController.AddedNewBase(b);
+    public void AddBase(Base b) => _gameplay.AddedNewBase(b);
 
     private void TouchStart(PointerEventData eventData)
     {
@@ -45,12 +47,12 @@ public class GameplayController : MonoInstaller
 
     private void TouchMoved(PointerEventData eventData)
     {
-        ThrowRay(eventData, _basesController.AddedBases);
+        ThrowRay(eventData, _gameplay.SelectedBase);
     }
 
     private void TouchEnd(PointerEventData eventData)
     {
-        ThrowRay(eventData, _basesController.CreateUnits);
+        ThrowRay(eventData, _gameplay.CreateUnits);
     }
 
     private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D> method)
@@ -65,6 +67,13 @@ public class GameplayController : MonoInstaller
 
     private void Update()
     {
-        _basesController.UpdateUnits(OnUpdateBases);
+        _gameplay.UpdateUnits(OnUpdateBases);
     }
+}
+
+[Serializable]
+public class GameplayData
+{
+    public Squad SquadData;
+    public Color ColorData;
 }

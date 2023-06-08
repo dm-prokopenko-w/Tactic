@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c825d8979ee586b4ca7796316fad24ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _icon: {fileID: 8919411215605445848}
+  Id: 
   SquadItem: 0
   _collider: {fileID: 3895050934573672264}
   _rb: {fileID: 1620181022114395530}
