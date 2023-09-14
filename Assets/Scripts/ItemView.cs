@@ -19,10 +19,11 @@ public enum TypeItemView
 public abstract class ItemView : MonoBehaviour
 {
     [SerializeField] protected Image _icon;
-    
-    public string Id;
-    public Squad SquadItem;
-    protected TypeItemView _type;
+    [SerializeField] protected CircleCollider2D _collider;
+    [SerializeField] protected Rigidbody2D _rb;
+
+    protected Squad _squadItem;
+    private Color _color;
 
     public virtual void AddedUnit(int count)
     {
@@ -30,11 +31,14 @@ public abstract class ItemView : MonoBehaviour
 
     public virtual string GetTargetId() => null;
     public virtual int GetCountUnits() => 0;
-
-    public virtual TypeItemView GetTypeItemView() => _type;
-
+    public Squad GetSquad() => _squadItem;
+    public void SetSquad(Squad s) => _squadItem = s;
+    public CircleCollider2D GetCollider() => _collider;
     public void ChangeColor(Color color)
     {
+        _color = color;
         _icon.color = color;
     }
+
+    public Color GetColor() => _color;
 }

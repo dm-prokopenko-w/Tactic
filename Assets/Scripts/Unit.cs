@@ -1,44 +1,42 @@
 using System;
 using UnityEngine;
+using BaseSystem;
+using UnityEngine.UI;
 
-public class Unit : ItemView
+namespace UnitSystem
 {
-    [SerializeField] private CircleCollider2D _collider;
-    [SerializeField] private Rigidbody2D _rb;
-
-    protected TypeItemView _type => TypeItemView.Unit;
-
-    private Collider2D _startCol;
-    private Base _targetBase;
-    private Vector3 _target;
-    private float _speed = 5f;
-    private Action<Collider2D, Collider2D> _onTrigger;
-
-    public void SetTarget(Base target, Base startBase, Action<Collider2D, Collider2D> onTrigger)
+    public class Unit : ItemView
     {
-        SquadItem = startBase.SquadItem;
-        _targetBase = target;
-        _target = target.transform.position;
-        _onTrigger = onTrigger;
-        _startCol = startBase.GetCollider();
-    }
+        private Collider2D _startCol;
+        private Base _targetBase;
+        private Vector3 _target;
+        private float _speed = 5f;
+        private Action<Collider2D, Collider2D> _onTrigger;
 
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col != _startCol)
+        public void SetTarget(Base target, Base startBase, Action<Collider2D, Collider2D> onTrigger)
         {
-            _onTrigger?.Invoke(_collider, col);
+            _squadItem = startBase.GetSquad();
+            _targetBase = target;
+            _target = target.transform.position;
+            _onTrigger = onTrigger;
+            _startCol = startBase.GetCollider();
+            ChangeColor(startBase.GetColor());
+            SetSquad(startBase.GetSquad());
         }
-    }
 
-    public override TypeItemView GetTypeItemView() => _type;
-    public override string GetTargetId() => _targetBase.Id;
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col != _startCol)
+            {
+                _onTrigger?.Invoke(_collider, col);
+            }
+        }
 
-    public Collider2D GetCollider() => _collider;
-    public Base GetTargetBase() => _targetBase;
+        public Base GetTargetBase() => _targetBase;
 
-    private void Update()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, _target, Time.deltaTime * _speed);
+        private void Update()
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _target, Time.deltaTime * _speed);
+        }
     }
 }

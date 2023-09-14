@@ -1,61 +1,91 @@
 using TMPro;
 using UnityEngine;
 using Zenject;
-using UnityEngine.UI;
+using Core;
+using UnityEngine.EventSystems;
 
-public class Base : ItemView
+namespace BaseSystem
 {
-    [Inject] private GamefieldController _gamefieldController;
-
-    [SerializeField] private CircleCollider2D _collider;
-    [SerializeField] private Rigidbody2D _rb;
-    [SerializeField] private TextMeshProUGUI _counter;
-    [SerializeField] private RectTransform _parent;
-    
-    protected TypeItemView _type => TypeItemView.Base;
-
-    private int _countUnits = 10;
-
-    private void Start()
+    public class Base : ItemView
     {
-        _gamefieldController.AddBase(this);
-        UpdateCounter();
-        _gamefieldController.OnUpdateBases += UpdateUnits;
-    }
+        [Inject] private GamefieldController _gamefieldController;
+        [Inject] private ControlModule _control;
 
-    private void OnDestroy()
-    {
-        _gamefieldController.OnUpdateBases -= UpdateUnits;
-    }
+        [SerializeField] private TextMeshProUGUI _counter;
+        [SerializeField] private RectTransform _parent;
+        [SerializeField] private LineRenderer _line;
+        [SerializeField] private BaseData _data;
 
-    public override TypeItemView GetTypeItemView() => _type;
-    public override int GetCountUnits() => _countUnits;
+        private int _countUnits;
+        private bool _isSelected = false;
 
-    public CircleCollider2D GetCollider() => _collider;
-    public Rigidbody2D GetRigidbody() => _rb;
+        private void Start()
+        {
+            _gamefieldController.AddBase(this);
+            UpdateCounter();
+            _gamefieldController.OnUpdateBases += UpdateUnits;
 
-    public int GetMovedCountUnits()
-    {
-        int count = _countUnits / 2;
-        _countUnits -= count;
-        UpdateCounter();
-        return count;
-    }
+            _control.TouchMoved += Drag;
+            _control.TouchEnd += End;
 
-    public override void AddedUnit(int count)
-    {
-        _countUnits += count;
-        UpdateCounter();
-    }
+            _line.positionCount = 2;
+            _line.SetPosition(0, transform.position);
+            _line.SetPosition(1, transform.position);
 
-    private void UpdateCounter()
-    {
-        _counter.text = _countUnits.ToString();
-    }
+            _countUnits = _data.CountOnStart;
+            ChangeColor(_data.ColorSquad);
+            SetSquad(_data.SquadType);
+        }
 
-    private protected void UpdateUnits()
-    {
-        _countUnits++;
-        UpdateCounter();
+        private void OnDestroy()
+        {
+            _gamefieldController.OnUpdateBases -= UpdateUnits;
+            _control.TouchMoved -= Drag;
+            _control.TouchEnd -= End;
+        }
+
+        public override int GetCountUnits() => _countUnits;
+
+        public Rigidbody2D GetRigidbody() => _rb;
+        public void SelectedBase(bool value) => _isSelected = value;
+        public bool IsSelectedBase() => _isSelected;
+
+        private void Drag(PointerEventData data)
+        {
+            if (!_isSelected) return;
+            var p = Camera.main.ScreenToWorldPoint(data.position);
+            _line.SetPosition(1, new Vector3(p.x, p.y, transform.position.z));
+        }
+
+        private void End(PointerEventData data)
+        {
+            _line.SetPosition(1, transform.position);
+            _isSelected = false;
+        }
+
+        public int GetMovedCountUnits()
+        {
+            int count = _countUnits / 2;
+            _countUnits -= count;
+            UpdateCounter();
+            return count;
+        }
+
+        public override void AddedUnit(int count)
+        {
+            _countUnits += count;
+            UpdateCounter();
+        }
+
+        private void UpdateCounter()
+        {
+            _counter.text = _countUnits.ToString();
+        }
+
+        private protected void UpdateUnits()
+        {
+            _countUnits++;
+            UpdateCounter();
+        }
     }
 }
