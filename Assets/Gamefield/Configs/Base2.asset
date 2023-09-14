@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6177a838cefa28a449f9b4c3b3173f27, type: 3}
+  m_Name: Base2
+  m_EditorClassIdentifier: 
+  SquadType: 1
+  ColorSquad: {r: 0.23421544, g: 0.09996435, b: 0.735849, a: 1}
+  CountOnStart: 10
