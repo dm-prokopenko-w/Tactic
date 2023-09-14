@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
+using BaseSystem;
 using Core;
 using UnityEngine;
+using UnitSystem;
 
 public class GameplayManager
 {
     private BasesController _basesController;
     private List<GameplayData> _data;
     private Action<Collider2D, Collider2D> _onTrigger;
-    private Dictionary<Collider2D, ItemView> _items = new Dictionary<Collider2D, ItemView>();
-    private Dictionary<Collider2D, Unit> _movedUnits = new Dictionary<Collider2D, Unit>();
+    private List<Base> _bases = new List<Base>();
+    private List<Unit> _movedUnits = new List<Unit>();
     private ObjectPoolModule _poolModule;
     private Transform _parent;
-    
-    public GameplayManager(List<GameplayData> data, GameObject unitPrefab, ObjectPoolModule poolModule, Transform parent)
+
+    public GameplayManager(GameObject unitPrefab, ObjectPoolModule poolModule, Transform parent)
     {
-        _data = data;
         _basesController = new BasesController(unitPrefab, poolModule, parent);
         _basesController.OnTrigger += CheckOnTrigger;
         _poolModule = poolModule;
@@ -26,10 +27,10 @@ public class GameplayManager
     {
         _basesController.OnTrigger -= CheckOnTrigger;
     }
-    
+
     public void AddedNewBase(Base b)
     {
-        _items.Add(b.GetCollider(), b);
+        _bases.Add(b);
         _basesController.AddedNewBase(b);
     }
 
@@ -40,7 +41,7 @@ public class GameplayManager
         List<Unit> units = _basesController.CreateUnits(hit);
         foreach (var unit in units)
         {
-            _items.Add(unit.GetCollider(), unit);
+            _movedUnits.Add(unit);
         }
     }
 
@@ -48,52 +49,44 @@ public class GameplayManager
 
     public void CheckOnTrigger(Collider2D thisCol, Collider2D targetCol)
     {
-        _items.TryGetValue(thisCol, out ItemView unit);
-        _items.TryGetValue(targetCol, out ItemView targetItem);
-        if(unit == null || targetCol == null) return;
+        Unit unit = _movedUnits.Find(x => x.GetCollider() == thisCol);
+        Base targetItem = _bases.Find(x => x.GetCollider() == targetCol);
 
-        switch (targetItem.GetTypeItemView())
-        {
-            case TypeItemView.Unit:
-                break;
-            case TypeItemView.Base:
-                OnTriggerWithBase(unit, targetItem);
-                break;
-        }
+        if (unit == null || targetCol == null) return;
 
-        _items.Remove(thisCol);
+        OnTriggerWithBase(unit, targetItem);
         unit.transform.SetParent(_parent);
         _poolModule.Despawn(unit.gameObject);
     }
 
-    private void OnTriggerWithBase(ItemView unit, ItemView targetItem)
+    private void OnTriggerWithBase(Unit unit, Base targetItem)
     {
-        if (unit.SquadItem == targetItem.SquadItem)
+        if (unit.GetSquad() == targetItem.GetSquad())
         {
-            if (unit.GetTargetId().Equals(targetItem.Id))
+            if (unit.GetTargetBase().GetCollider() == targetItem.GetCollider())
             {
                 targetItem.AddedUnit(1);
             }
         }
         else
         {
-            if(targetItem.GetCountUnits() > 0)
+            if (targetItem.GetCountUnits() > 0)
             {
                 targetItem.AddedUnit(-1);
             }
             else
             {
-                ChangeSquad(targetItem, unit.SquadItem);
+                ChangeSquad(targetItem, unit.GetSquad(), unit.GetColor());
                 targetItem.AddedUnit(1);
             }
         }
+
+        _movedUnits.Remove(unit);
     }
 
-    private void ChangeSquad(ItemView item, Squad newSquad)
+    private void ChangeSquad(Base item, Squad newSquad, Color color)
     {
-        item.SquadItem = newSquad;
-        var color = _data.Find(x => x.SquadData == newSquad).ColorData;
-        Debug.LogError(color);
+        item.SetSquad(newSquad);
         item.ChangeColor(color);
     }
 }
