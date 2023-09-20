@@ -1,86 +1,70 @@
 using System;
 using System.Collections.Generic;
-using Core;
 using UnityEngine;
-using UnitSystem;
-using Random = UnityEngine.Random;
+using System.Linq;
 
 namespace BaseSystem
 {
     public class BasesController
     {
-        public Action<Collider2D, Collider2D> OnTrigger;
+        public Action OnUpdateBases;
+        public Action<Squad> OnChangeSquad;
 
-        private ObjectPoolModule _poolModule;
-        private GameObject _unitPrefab;
-
-        private List<Base> _bases;
-        private Squad _currentSquad = Squad.None;
+        private List<Base> _bases = new List<Base>();
         private float _currentTime;
         private float _step = 1f;
-        private Transform _parent;
 
-        public BasesController(GameObject unitPrefab, ObjectPoolModule poolModule, Transform parent)
+        public BasesController(Base[] bases, Action<Squad> onChangeSquad)
         {
-            _unitPrefab = unitPrefab;
-            _poolModule = poolModule;
-            _bases = new List<Base>();
-            _parent = parent;
+            foreach (var b in bases)
+            {
+                b.Init(this);
+            }
+
+            _bases = bases.ToList();
+            OnChangeSquad = onChangeSquad;
         }
 
-        public void AddedNewBase(Base b) => _bases.Add(b);
-
-        public void SelectedBase(RaycastHit2D hit)
+        public void SelectedBase(RaycastHit2D hit, Squad squad)
         {
             var b = _bases.Find(x => x.GetRigidbody() == hit.rigidbody);
             if (b == null) return;
-            if (_currentSquad == Squad.None)
+            if (squad == Squad.None)
             {
-                _currentSquad = b.GetSquad();
+                if (OnChangeSquad != null)
+                {
+                    OnChangeSquad.Invoke(b.GetSquad());
+                }
             }
 
-            if (_currentSquad != b.GetSquad()) return;
+            if (squad != b.GetSquad() || b.IsSelectedBase()) return;
 
             b.SelectedBase(true);
         }
 
-        public List<Unit> CreateUnits(RaycastHit2D hit)
+        public void UnSelectedBases()
         {
-            Base targetBase = _bases.Find(x => x.GetRigidbody() == hit.rigidbody);
-
-            var bases = new List<Base>(_bases);
-            bases.Remove(targetBase);
-            var units = new List<Unit>();
-
-            foreach (Base b in bases)
+            if (_bases != null)
             {
-                if (b.IsSelectedBase())
+                foreach (var b in _bases)
                 {
-                    int count = b.GetMovedCountUnits();
-                    for (int i = 0; i < count; i++)
-                    {
-                        var p = b.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
-                        var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
-                        var unitScript = unit.GetComponent<Unit>();
-                        unitScript.SetTarget(targetBase, b, OnTrigger);
-                        units.Add(unitScript);
-                    }
-
                     b.SelectedBase(false);
                 }
             }
 
-            _currentSquad = Squad.None;
-            return units;
+            if (OnChangeSquad != null)
+            {
+                OnChangeSquad.Invoke(Squad.None);
+            }
         }
 
-        public void UpdateUnits(Action onUpdateBases)
+        public void Update()
         {
             _currentTime += Time.deltaTime;
 
             if (_currentTime > _step)
             {
-                onUpdateBases?.Invoke();
+                OnUpdateBases?.Invoke();
                 _currentTime = 0;
             }
         }

@@ -1,6 +1,6 @@
 using TMPro;
 using UnityEngine;
-using Zenject;
+using VContainer;
 using Core;
 using UnityEngine.EventSystems;
 
@@ -8,7 +8,6 @@ namespace BaseSystem
 {
     public class Base : ItemView
     {
-        [Inject] private GamefieldController _gamefieldController;
         [Inject] private ControlModule _control;
 
         [SerializeField] private TextMeshProUGUI _counter;
@@ -18,39 +17,46 @@ namespace BaseSystem
 
         private int _countUnits;
         private bool _isSelected = false;
+        private BasesController _basesController;
 
-        private void Start()
+        public void Init(BasesController basesController)
         {
-            _gamefieldController.AddBase(this);
-            UpdateCounter();
-            _gamefieldController.OnUpdateBases += UpdateUnits;
-
-            _control.TouchMoved += Drag;
+            _control.TouchStart += SelectBase;
+            _control.TouchMoved += SelectBase;
             _control.TouchEnd += End;
+
+            _basesController = basesController;
+
+            basesController.OnUpdateBases += UpdateBaseCountUnits;
 
             _line.positionCount = 2;
             _line.SetPosition(0, transform.position);
             _line.SetPosition(1, transform.position);
 
             _countUnits = _data.CountOnStart;
+
             ChangeColor(_data.ColorSquad);
             SetSquad(_data.SquadType);
+            UpdateCounter();
         }
 
         private void OnDestroy()
         {
-            _gamefieldController.OnUpdateBases -= UpdateUnits;
-            _control.TouchMoved -= Drag;
+            _basesController.OnUpdateBases += UpdateBaseCountUnits;
+
+            _control.TouchStart -= SelectBase;
+            _control.TouchMoved -= SelectBase;
             _control.TouchEnd -= End;
         }
 
-        public override int GetCountUnits() => _countUnits;
+        public int GetCountUnits() => _countUnits;
 
         public Rigidbody2D GetRigidbody() => _rb;
         public void SelectedBase(bool value) => _isSelected = value;
+
         public bool IsSelectedBase() => _isSelected;
 
-        private void Drag(PointerEventData data)
+        private void SelectBase(PointerEventData data)
         {
             if (!_isSelected) return;
             var p = Camera.main.ScreenToWorldPoint(data.position);
@@ -60,7 +66,6 @@ namespace BaseSystem
         private void End(PointerEventData data)
         {
             _line.SetPosition(1, transform.position);
-            _isSelected = false;
         }
 
         public int GetMovedCountUnits()
@@ -71,7 +76,7 @@ namespace BaseSystem
             return count;
         }
 
-        public override void AddedUnit(int count)
+        public void AddedUnit(int count)
         {
             _countUnits += count;
             UpdateCounter();
@@ -82,7 +87,7 @@ namespace BaseSystem
             _counter.text = _countUnits.ToString();
         }
 
-        private protected void UpdateUnits()
+        private void UpdateBaseCountUnits()
         {
             _countUnits++;
             UpdateCounter();

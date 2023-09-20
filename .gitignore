@@ -77,3 +77,4 @@ Assets/Plugins/tvOS/Firebase
 Assets/Plugins/iOS/Firebase
 *.meta
 .idea
+.vscode

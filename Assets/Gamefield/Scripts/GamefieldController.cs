@@ -1,12 +1,14 @@
 using System;
 using Core;
 using UnityEngine;
+using BaseSystem;
 using UnityEngine.EventSystems;
-using Zenject;
+using VContainer;
+using System.Linq;
 
-namespace BaseSystem
+namespace GameplaySystem
 {
-    public class GamefieldController : MonoInstaller
+    public class GamefieldController : Moduls
     {
         [Inject] private ControlModule _control;
         [Inject] private ObjectPoolModule _poolModule;
@@ -15,54 +17,54 @@ namespace BaseSystem
         [SerializeField] private Transform _parent;
 
         private GameplayManager _gameplay;
+        private BasesController _basesController;
+        private UnitsManager _unitsManager;
+        private Squad _currentSquad = Squad.None;
 
-        public Action OnUpdateBases;
 
-        private Vector2 _lastPos;
-
-        public override void InstallBindings() =>
-            Container.Bind<GamefieldController>().FromInstance(this).AsSingle().NonLazy();
-
-        private void Awake()
+        private void Start()
         {
-            _gameplay = new GameplayManager(_unitPrefab, _poolModule, _parent);
+            var bases = FindObjectsOfType<Base>();
+            _gameplay = new GameplayManager();
+            _basesController = new BasesController(bases, ChangeSquad);
+            _unitsManager = new UnitsManager(_unitPrefab, _parent, _poolModule, bases, _gameplay);
 
             _control.TouchStart += TouchStart;
             _control.TouchEnd += TouchEnd;
             _control.TouchMoved += TouchMoved;
         }
 
+        private void ChangeSquad(Squad squad) => _currentSquad = squad;
+
         private void OnDestroy()
         {
-            _gameplay.Unsubscribe();
             _control.TouchStart -= TouchStart;
             _control.TouchEnd -= TouchEnd;
             _control.TouchMoved -= TouchMoved;
         }
 
-        public void AddBase(Base b) => _gameplay.AddedNewBase(b);
-
         private void TouchStart(PointerEventData eventData)
         {
+            ThrowRay(eventData, _basesController.SelectedBase);
         }
 
         private void TouchMoved(PointerEventData eventData)
         {
-            ThrowRay(eventData, _gameplay.SelectedBase);
+            ThrowRay(eventData, _basesController.SelectedBase);
         }
 
         private void TouchEnd(PointerEventData eventData)
         {
-            ThrowRay(eventData, _gameplay.CreateUnits);
+            ThrowRay(eventData, _unitsManager.CreateUnits, _basesController.UnSelectedBases);
         }
 
-        private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D> method, Action missed = null)
+        private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D, Squad> method, Action missed = null)
         {
             Ray ray = Camera.main.ScreenPointToRay(eventData.position);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 100.0f);
             if (hit != null && hit.collider != null)
             {
-                method?.Invoke(hit);
+                method?.Invoke(hit, _currentSquad);
             }
             else
             {
@@ -72,14 +74,12 @@ namespace BaseSystem
 
         private void Update()
         {
-            _gameplay.UpdateUnits(OnUpdateBases);
+            _basesController.Update();
+        }
+
+        public override void Register(IContainerBuilder builder)
+        {
+            builder.Register<GamefieldController>(Lifetime.Scoped);
         }
     }
-}
-
-[Serializable]
-public class GameplayData
-{
-    public Squad SquadData;
-    public Color ColorData;
 }

@@ -25,12 +25,6 @@ public abstract class ItemView : MonoBehaviour
     protected Squad _squadItem;
     private Color _color;
 
-    public virtual void AddedUnit(int count)
-    {
-    }
-
-    public virtual string GetTargetId() => null;
-    public virtual int GetCountUnits() => 0;
     public Squad GetSquad() => _squadItem;
     public void SetSquad(Squad s) => _squadItem = s;
     public CircleCollider2D GetCollider() => _collider;
