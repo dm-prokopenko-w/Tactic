@@ -4,17 +4,17 @@ using UnityEngine;
 using BaseSystem;
 using UnityEngine.EventSystems;
 using VContainer;
-using System.Linq;
 
 namespace GameplaySystem
 {
-    public class GamefieldController : Moduls
+    public class GameplayController : Moduls
     {
         [Inject] private ControlModule _control;
         [Inject] private ObjectPoolModule _poolModule;
 
         [SerializeField] private GameObject _unitPrefab;
         [SerializeField] private Transform _parent;
+        [SerializeField] private GameData _gameData;
 
         private GameplayManager _gameplay;
         private BasesController _basesController;
@@ -79,7 +79,7 @@ namespace GameplaySystem
 
         public override void Register(IContainerBuilder builder)
         {
-            builder.Register<GamefieldController>(Lifetime.Scoped);
+            builder.Register<GameplayController>(Lifetime.Scoped);
         }
     }
 }
