@@ -4,31 +4,41 @@ using UnityEngine;
 using BaseSystem;
 using UnityEngine.EventSystems;
 using VContainer;
+using AISystem;
 
 namespace GameplaySystem
 {
-    public class GameplayController : Moduls
+    public class GameplayController : MonoBehaviour
     {
         [Inject] private ControlModule _control;
-        [Inject] private ObjectPoolModule _poolModule;
+
+        [Inject] private GameplayManager _gameplay;
+        [Inject] private BasesController _basesController;
+        [Inject] private UnitsManager _unitsManager;
+        [Inject] private AIController _ai;
 
         [SerializeField] private GameObject _unitPrefab;
         [SerializeField] private Transform _parent;
         [SerializeField] private GameData _gameData;
 
-        private GameplayManager _gameplay;
-        private BasesController _basesController;
-        private UnitsManager _unitsManager;
         private Squad _currentSquad = Squad.None;
-
 
         private void Start()
         {
-            var bases = FindObjectsOfType<Base>();
-            _gameplay = new GameplayManager();
-            _basesController = new BasesController(bases, ChangeSquad);
-            _unitsManager = new UnitsManager(_unitPrefab, _parent, _poolModule, bases, _gameplay);
+            InitSystem();
+            Subscribe();
+        }
 
+        private void InitSystem()
+        {
+            var bases = FindObjectsOfType<Base>();
+            _basesController.Init(bases, ChangeSquad);
+            _unitsManager.Init(_unitPrefab, _parent);
+            _ai.Init(_gameData.Enemy);
+        }
+
+        private void Subscribe()
+        {
             _control.TouchStart += TouchStart;
             _control.TouchEnd += TouchEnd;
             _control.TouchMoved += TouchMoved;
@@ -55,7 +65,7 @@ namespace GameplaySystem
 
         private void TouchEnd(PointerEventData eventData)
         {
-            ThrowRay(eventData, _unitsManager.CreateUnits, _basesController.UnSelectedBases);
+            ThrowRay(eventData, _gameplay.CreateUnits, _basesController.UnSelectedBases);
         }
 
         private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D, Squad> method, Action missed = null)
@@ -70,16 +80,6 @@ namespace GameplaySystem
             {
                 missed?.Invoke();
             }
-        }
-
-        private void Update()
-        {
-            _basesController.Update();
-        }
-
-        public override void Register(IContainerBuilder builder)
-        {
-            builder.Register<GameplayController>(Lifetime.Scoped);
         }
     }
 }

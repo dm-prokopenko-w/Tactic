@@ -10,6 +10,7 @@ namespace BaseSystem
     public class Base : ItemView
     {
         [Inject] private ControlModule _control;
+        [Inject] private BasesController _basesController;
 
         [SerializeField] private TextMeshProUGUI _counter;
         [SerializeField] private RectTransform _parent;
@@ -18,32 +19,44 @@ namespace BaseSystem
 
         private int _countUnits;
         private bool _isSelected = false;
-        private BasesController _basesController;
 
-        public void Init(BasesController basesController)
+        public void Init()
         {
-            _control.TouchStart += SelectBase;
-            _control.TouchMoved += SelectBase;
-            _control.TouchEnd += End;
+            Subscribe();
 
-            _basesController = basesController;
-
-            basesController.OnUpdateBases += UpdateBaseCountUnits;
-
-            _line.positionCount = 2;
-            _line.SetPosition(0, transform.position);
-            _line.SetPosition(1, transform.position);
+            InitLine();
 
             _countUnits = _data.CountOnStart;
 
-            ChangeColor(_data.ColorSquad);
-            SetSquad(_data.SquadType);
+            ChangeSquad(_data.ColorSquad, _data.SquadType);
             UpdateCounter();
+        }
+
+        private void InitLine()
+        {
+            _line.positionCount = 2;
+            _line.SetPosition(0, transform.position);
+            _line.SetPosition(1, transform.position);
+        }
+
+        private void Subscribe()
+        {
+            if (_basesController != null)
+            {
+                _basesController.OnUpdateBases += UpdateBaseCountUnits;
+            }
+
+            _control.TouchStart += SelectBase;
+            _control.TouchMoved += SelectBase;
+            _control.TouchEnd += End;
         }
 
         private void OnDestroy()
         {
-            _basesController.OnUpdateBases += UpdateBaseCountUnits;
+            if (_basesController != null)
+            {
+                _basesController.OnUpdateBases -= UpdateBaseCountUnits;
+            }
 
             _control.TouchStart -= SelectBase;
             _control.TouchMoved -= SelectBase;
@@ -52,7 +65,6 @@ namespace BaseSystem
 
         public int GetCountUnits() => _countUnits;
 
-        public Rigidbody2D GetRigidbody() => _rb;
         public void SelectedBase(bool value) => _isSelected = value;
 
         public bool IsSelectedBase() => _isSelected;

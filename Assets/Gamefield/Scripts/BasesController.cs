@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using GameplaySystem;
+using VContainer.Unity;
 
 namespace BaseSystem
 {
-    public class BasesController
+    public class BasesController : ITickable
     {
         public Action OnUpdateBases;
         public Action<Squad> OnChangeSquad;
@@ -15,11 +16,11 @@ namespace BaseSystem
         private float _currentTime;
         private float _step = 1f;
 
-        public BasesController(Base[] bases, Action<Squad> onChangeSquad)
+        public void Init(Base[] bases, Action<Squad> onChangeSquad)
         {
             foreach (var b in bases)
             {
-                b.Init(this);
+                b.Init();
             }
 
             _bases = bases.ToList();
@@ -28,7 +29,7 @@ namespace BaseSystem
 
         public void SelectedBase(RaycastHit2D hit, Squad squad)
         {
-            var b = _bases.Find(x => x.GetRigidbody() == hit.rigidbody);
+            var b = _bases.Find(x => x.GetCollider() == hit.collider);
             if (b == null) return;
             if (squad == Squad.None)
             {
@@ -41,6 +42,19 @@ namespace BaseSystem
             if (squad != b.GetSquad() || b.IsSelectedBase()) return;
 
             b.SelectedBase(true);
+        }
+
+        public List<Base> GetBases(Squad squad) => _bases.FindAll(x => x.GetSquad() == squad);
+
+        public void Tick()
+        {
+            _currentTime += Time.deltaTime;
+
+            if (_currentTime > _step)
+            {
+                OnUpdateBases?.Invoke();
+                _currentTime = 0;
+            }
         }
 
         public void UnSelectedBases()
@@ -59,15 +73,12 @@ namespace BaseSystem
             }
         }
 
-        public void Update()
+        public (Base, List<Base>) GetBasesForCreateUnits(Collider2D col)
         {
-            _currentTime += Time.deltaTime;
-
-            if (_currentTime > _step)
-            {
-                OnUpdateBases?.Invoke();
-                _currentTime = 0;
-            }
+            Base targetBase = _bases.Find(x => x.GetCollider() == col);
+            var selectedBase = _bases.FindAll(x => x.IsSelectedBase());
+            selectedBase.Remove(targetBase);
+            return (targetBase, selectedBase);
         }
     }
 }

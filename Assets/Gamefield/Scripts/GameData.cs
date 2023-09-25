@@ -16,6 +16,7 @@ namespace GameplaySystem
     public class Enemy
     {
         public string Id;
+        public Squad CurrentSquad;
         public List<BaseData> BasesEnemy;
     }
 }

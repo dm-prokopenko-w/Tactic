@@ -17,8 +17,7 @@ namespace UnitSystem
             _squadItem = startBase.GetSquad();
             _targetBase = target;
             _target = target.transform.position;
-            ChangeColor(startBase.GetColor());
-            SetSquad(startBase.GetSquad());
+            ChangeSquad(startBase.GetColor(), startBase.GetSquad());
             OnTrigger = onTrigger;
         }
 

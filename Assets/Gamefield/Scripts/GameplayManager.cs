@@ -1,31 +1,22 @@
 using BaseSystem;
-using UnitSystem;
+using System.Collections.Generic;
+using UnityEngine;
+using VContainer;
 
 namespace GameplaySystem
 {
     public class GameplayManager
     {
-        public void OnTriggerWithBase(Unit unit, Base targetItem)
+        [Inject] private UnitsManager _unitsManager;
+        [Inject] private BasesController _basesController;
+
+        public void CreateUnits(RaycastHit2D hit, Squad squad)
         {
-            if (unit.GetSquad() == targetItem.GetSquad())
+            (Base targetBase, List<Base> selectedBase) = _basesController.GetBasesForCreateUnits(hit.collider);
+
+            foreach (Base b in selectedBase)
             {
-                if (unit.GetTargetBase().GetCollider() == targetItem.GetCollider())
-                {
-                    targetItem.AddedUnit(1);
-                }
-            }
-            else
-            {
-                if (targetItem.GetCountUnits() > 0)
-                {
-                    targetItem.AddedUnit(-1);
-                }
-                else
-                {
-                    targetItem.SetSquad(unit.GetSquad());
-                    targetItem.ChangeColor(unit.GetColor());
-                    targetItem.AddedUnit(1);
-                }
+                _unitsManager.CreateUnit(b, targetBase);
             }
         }
     }

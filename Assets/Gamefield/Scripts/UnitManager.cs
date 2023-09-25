@@ -1,60 +1,68 @@
 using BaseSystem;
 using Core;
-using System.Collections.Generic;
-using System.Linq;
 using UnitSystem;
 using UnityEngine;
+using VContainer;
 
 namespace GameplaySystem
 {
     public class UnitsManager
     {
-        private List<Base> _bases = new List<Base>();
-        private ObjectPoolModule _poolModule;
+        [Inject] private ObjectPoolModule _poolModule;
+
         private GameObject _unitPrefab;
         private Transform _parent;
-        private GameplayManager _gameplay;
 
-        public UnitsManager(GameObject unitPrefab, Transform parent, ObjectPoolModule poolModule, Base[] bases, GameplayManager gameplay)
+        public void Init(GameObject unitPrefab, Transform parent)
         {
-            _gameplay = gameplay;
             _unitPrefab = unitPrefab;
             _parent = parent;
-            _poolModule = poolModule;
-            _bases = bases.ToList();
         }
 
-        public void CreateUnits(RaycastHit2D hit, Squad squad)
+        public void CreateUnit(Base startBase, Base targetBase)
         {
-            Base targetBase = _bases.Find(x => x.GetCollider() == hit.collider);
-
-            var bases = new List<Base>(_bases);
-            bases.Remove(targetBase);
-
-            foreach (Base b in bases)
+            int count = startBase.GetMovedCountUnits();
+            for (int i = 0; i < count; i++)
             {
-                if (b.IsSelectedBase())
-                {
-                    int count = b.GetMovedCountUnits();
-                    for (int i = 0; i < count; i++)
-                    {
-                        var p = b.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
-                        var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
-                        var unitScript = unit.GetComponent<Unit>();
-                        unitScript.SetTarget(targetBase, b, OnTriggerWithBase);
-                    }
-
-                    b.SelectedBase(false);
-                }
+                var p = startBase.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
+                var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
+                var unitScript = unit.GetComponent<Unit>();
+                unitScript.SetTarget(targetBase, startBase, OnTriggerWithBase);
             }
+
+            startBase.SelectedBase(false);
         }
 
         private void OnTriggerWithBase(Unit unit)
         {
-             _gameplay.OnTriggerWithBase(unit, unit.GetTargetBase());
+             OnTriggerWithBase(unit, unit.GetTargetBase());
             if (unit == null) return;
             unit.transform.SetParent(_parent);
             _poolModule.Despawn(unit.gameObject);
         }
+
+        private void OnTriggerWithBase(Unit unit, Base targetItem)
+        {
+            if (unit.GetSquad() == targetItem.GetSquad())
+            {
+                if (unit.GetTargetBase().GetCollider() == targetItem.GetCollider())
+                {
+                    targetItem.AddedUnit(1);
+                }
+            }
+            else
+            {
+                if (targetItem.GetCountUnits() > 0)
+                {
+                    targetItem.AddedUnit(-1);
+                }
+                else
+                {
+                    targetItem.ChangeSquad(unit.GetColor(), unit.GetSquad());
+                    targetItem.AddedUnit(1);
+                }
+            }
+        }
+
     }
 }

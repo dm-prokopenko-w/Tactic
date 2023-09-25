@@ -18,5 +18,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 018ac7505518341459df687c0b404a27, type: 2}
   Enemy:
   - Id: Enemy1
+    CurrentSquad: 2
     BasesEnemy:
     - {fileID: 11400000, guid: 04940bb7498995b49a1392b5be884356, type: 2}
+    - {fileID: 11400000, guid: d534859daa0085542b4a7471b9d48104, type: 2}
+    - {fileID: 11400000, guid: 9547e1714f16b834f8eee1b0ef82f842, type: 2}
