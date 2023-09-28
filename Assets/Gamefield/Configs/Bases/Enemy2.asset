@@ -15,4 +15,4 @@ MonoBehaviour:
   Id: Enemy2
   SquadType: 2
   ColorSquad: {r: 0.7372549, g: 0.175058, b: 0.098039225, a: 1}
-  CountOnStart: 10
+  CountOnStart: 5

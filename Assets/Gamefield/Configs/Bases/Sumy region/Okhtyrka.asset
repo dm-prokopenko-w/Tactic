@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6177a838cefa28a449f9b4c3b3173f27, type: 3}
-  m_Name: Base1
+  m_Name: Okhtyrka
   m_EditorClassIdentifier: 
-  Id: Base1
+  Id: Okhtyrka
   SquadType: 1
-  ColorSquad: {r: 0.23421544, g: 0.09996435, b: 0.735849, a: 1}
-  CountOnStart: 10
+  ColorSquad: {r: 0, g: 0.14117648, b: 1, a: 1}
+  CountOnStart: 0

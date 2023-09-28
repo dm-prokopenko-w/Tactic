@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6177a838cefa28a449f9b4c3b3173f27, type: 3}
   m_Name: Enemy3
   m_EditorClassIdentifier: 
-  Id: Enemy2
+  Id: Enemy3
   SquadType: 2
   ColorSquad: {r: 0.7372549, g: 0.175058, b: 0.098039225, a: 1}
-  CountOnStart: 10
+  CountOnStart: 5
