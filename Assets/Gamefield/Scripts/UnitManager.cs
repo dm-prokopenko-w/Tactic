@@ -1,5 +1,6 @@
 using BaseSystem;
 using Core;
+using System.Collections.Generic;
 using UnitSystem;
 using UnityEngine;
 using VContainer;
@@ -19,23 +20,28 @@ namespace GameplaySystem
             _parent = parent;
         }
 
-        public void CreateUnit(Base startBase, Base targetBase)
+        public void CreateUnits(List<Base> startBases, Base targetBase)
         {
-            int count = startBase.GetMovedCountUnits();
-            for (int i = 0; i < count; i++)
+            foreach (Base b in startBases)
             {
-                var p = startBase.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
-                var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
-                var unitScript = unit.GetComponent<Unit>();
-                unitScript.SetTarget(targetBase, startBase, OnTriggerWithBase);
+                int count = b.GetMovedCountUnits();
+                for (int i = 0; i < count; i++)
+                {
+                    var p = b.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
+                    var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
+                    var unitScript = unit.GetComponent<Unit>();
+                    unitScript.SetTarget(targetBase, b, OnTriggerWithBase);
+                }
+
+                b.SelectedBase(false);
             }
 
-            startBase.SelectedBase(false);
+            targetBase.SelectedBase(false);
         }
 
         private void OnTriggerWithBase(Unit unit)
         {
-             OnTriggerWithBase(unit, unit.GetTargetBase());
+            OnTriggerWithBase(unit, unit.GetTargetBase());
             if (unit == null) return;
             unit.transform.SetParent(_parent);
             _poolModule.Despawn(unit.gameObject);

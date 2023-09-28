@@ -13,7 +13,7 @@ namespace GameplaySystem
 
     public abstract class ItemView : MonoBehaviour
     {
-        [SerializeField] protected Image _icon;
+        [SerializeField] protected SpriteRenderer _icon;
         [SerializeField] protected CircleCollider2D _collider;
 
         protected Squad _squadItem;

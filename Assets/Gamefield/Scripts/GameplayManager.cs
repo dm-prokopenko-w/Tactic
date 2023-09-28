@@ -1,6 +1,7 @@
 using BaseSystem;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using VContainer;
 
 namespace GameplaySystem
@@ -9,15 +10,13 @@ namespace GameplaySystem
     {
         [Inject] private UnitsManager _unitsManager;
         [Inject] private BasesController _basesController;
+        [Inject] private CameraController _cameraController;
+
 
         public void CreateUnits(RaycastHit2D hit, Squad squad)
         {
-            (Base targetBase, List<Base> selectedBase) = _basesController.GetBasesForCreateUnits(hit.collider);
-
-            foreach (Base b in selectedBase)
-            {
-                _unitsManager.CreateUnit(b, targetBase);
-            }
+            (Base targetBase, List<Base> selectedBases) = _basesController.GetBasesForCreateUnits(hit.collider);
+            _unitsManager.CreateUnits(selectedBases, targetBase);
         }
     }
 }

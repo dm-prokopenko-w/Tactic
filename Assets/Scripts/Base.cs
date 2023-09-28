@@ -12,8 +12,7 @@ namespace BaseSystem
         [Inject] private ControlModule _control;
         [Inject] private BasesController _basesController;
 
-        [SerializeField] private TextMeshProUGUI _counter;
-        [SerializeField] private RectTransform _parent;
+        [SerializeField] private TextMeshPro _counter;
         [SerializeField] private LineRenderer _line;
         [SerializeField] private BaseData _data;
 

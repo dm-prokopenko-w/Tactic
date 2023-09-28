@@ -19,7 +19,6 @@ namespace AISystem
         {
             foreach (var enemy in enemyData)
             {
-                Debug.Log(enemy.CurrentSquad);
                 var item = new AIItem()
                 {
                     BasesData = new List<BaseData>(enemy.BasesEnemy),
@@ -40,13 +39,15 @@ namespace AISystem
             int selectCount = Random.Range(0, bases.Count);
 
             List<Base> playerBases = _basesController.GetBases(Squad.Player);
+            if (playerBases == null || playerBases.Count <= 0) return;
             int playerNum = Random.Range(0, playerBases.Count - 1);
-
+            List<Base> selectedBases = new List<Base>();
             for (int i = 0; i < selectCount; i++)
             {
                 int num = Random.Range(0, bases.Count - 1);
-                _unitsManager.CreateUnit(bases[num], playerBases[playerNum]);
+                selectedBases.Add(bases[num]);
             }
+            _unitsManager.CreateUnits(selectedBases, playerBases[playerNum]);
         }
     }
 
@@ -60,8 +61,8 @@ namespace AISystem
 
         private AIState _currentSate;
 
-        private float _minTimeAwait = 1f;
-        private float _maxTimeAwait = 2f;
+        private float _minTimeAwait = 3f;
+        private float _maxTimeAwait = 5f;
         private float _timeAwait = 0;
         private float _currentTime = 0;
 

@@ -22,9 +22,12 @@ namespace GameplaySystem
         [SerializeField] private GameData _gameData;
 
         private Squad _currentSquad = Squad.None;
+        private CameraController _cameraController;
+        private bool _isHitBase = false;
 
         private void Start()
         {
+            _cameraController = new CameraController();
             InitSystem();
             Subscribe();
         }
@@ -55,16 +58,25 @@ namespace GameplaySystem
 
         private void TouchStart(PointerEventData eventData)
         {
-            ThrowRay(eventData, _basesController.SelectedBase);
+            _isHitBase = true;
+            ThrowRay(eventData, _basesController.SelectedBase, () => _isHitBase = false);
         }
 
         private void TouchMoved(PointerEventData eventData)
         {
-            ThrowRay(eventData, _basesController.SelectedBase);
+            if (_isHitBase)
+            {
+                ThrowRay(eventData, _basesController.SelectedBase);
+            }
+            else
+            {
+                _cameraController.Move(eventData);
+            }
         }
 
         private void TouchEnd(PointerEventData eventData)
         {
+            _isHitBase = false;
             ThrowRay(eventData, _gameplay.CreateUnits, _basesController.UnSelectedBases);
         }
 
