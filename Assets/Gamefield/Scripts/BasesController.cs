@@ -11,12 +11,13 @@ namespace BaseSystem
     {
         public Action OnUpdateBases;
         public Action<Squad> OnChangeSquad;
+        public Action<BaseView, Squad> OnChangeBaseSquad;
 
-        private List<Base> _bases = new List<Base>();
+        private List<BaseView> _bases = new List<BaseView>();
         private float _currentTime;
         private float _step = 1f;
 
-        public void Init(Base[] bases, Action<Squad> onChangeSquad)
+        public void Init(BaseView[] bases, Action<Squad> onChangeSquad)
         {
             foreach (var b in bases)
             {
@@ -44,7 +45,7 @@ namespace BaseSystem
             b.SelectedBase(true);
         }
 
-        public List<Base> GetBases(Squad squad) => _bases.FindAll(x => x.GetSquad() == squad);
+        public List<BaseView> GetBases(Squad squad) => _bases.FindAll(x => x.GetSquad() == squad);
 
         public void Tick()
         {
@@ -73,9 +74,9 @@ namespace BaseSystem
             }
         }
 
-        public (Base, List<Base>) GetBasesForCreateUnits(Collider2D col)
+        public (BaseView, List<BaseView>) GetBasesForCreateUnits(Collider2D col)
         {
-            Base targetBase = _bases.Find(x => x.GetCollider() == col);
+            BaseView targetBase = _bases.Find(x => x.GetCollider() == col);
             var selectedBase = _bases.FindAll(x => x.IsSelectedBase());
             selectedBase.Remove(targetBase);
             return (targetBase, selectedBase);

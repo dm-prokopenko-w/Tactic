@@ -32,9 +32,11 @@ namespace GameplaySystem
             Subscribe();
         }
 
+        public GameData GetGameData() => _gameData;
+
         private void InitSystem()
         {
-            var bases = FindObjectsOfType<Base>();
+            var bases = FindObjectsOfType<BaseView>();
             _basesController.Init(bases, ChangeSquad);
             _unitsManager.Init(_unitPrefab, _parent);
             _ai.Init(_gameData.Enemy);

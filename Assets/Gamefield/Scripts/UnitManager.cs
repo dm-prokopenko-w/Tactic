@@ -20,16 +20,16 @@ namespace GameplaySystem
             _parent = parent;
         }
 
-        public void CreateUnits(List<Base> startBases, Base targetBase)
+        public void CreateUnits(List<BaseView> startBases, BaseView targetBase)
         {
-            foreach (Base b in startBases)
+            foreach (BaseView b in startBases)
             {
                 int count = b.GetMovedCountUnits();
                 for (int i = 0; i < count; i++)
                 {
                     var p = b.transform.position + new Vector3(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
                     var unit = _poolModule.Spawn(_unitPrefab, p, Quaternion.identity, _parent);
-                    var unitScript = unit.GetComponent<Unit>();
+                    var unitScript = unit.GetComponent<UnitView>();
                     unitScript.SetTarget(targetBase, b, OnTriggerWithBase);
                 }
 
@@ -39,7 +39,7 @@ namespace GameplaySystem
             targetBase.SelectedBase(false);
         }
 
-        private void OnTriggerWithBase(Unit unit)
+        private void OnTriggerWithBase(UnitView unit)
         {
             OnTriggerWithBase(unit, unit.GetTargetBase());
             if (unit == null) return;
@@ -47,7 +47,7 @@ namespace GameplaySystem
             _poolModule.Despawn(unit.gameObject);
         }
 
-        private void OnTriggerWithBase(Unit unit, Base targetItem)
+        private void OnTriggerWithBase(UnitView unit, BaseView targetItem)
         {
             if (unit.GetSquad() == targetItem.GetSquad())
             {

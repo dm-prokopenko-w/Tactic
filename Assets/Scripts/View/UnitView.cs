@@ -5,14 +5,14 @@ using GameplaySystem;
 
 namespace UnitSystem
 {
-    public class Unit : ItemView
+    public class UnitView : ItemView
     {
-        private Base _targetBase;
+        private BaseView _targetBase;
         private Vector3 _target;
         private float _speed = 5f;
-        private Action<Unit> OnTrigger;
+        private Action<UnitView> OnTrigger;
 
-        public void SetTarget(Base target, Base startBase, Action<Unit> onTrigger)
+        public void SetTarget(BaseView target, BaseView startBase, Action<UnitView> onTrigger)
         {
             _squadItem = startBase.GetSquad();
             _targetBase = target;
@@ -21,7 +21,7 @@ namespace UnitSystem
             OnTrigger = onTrigger;
         }
 
-        public Base GetTargetBase() => _targetBase;
+        public BaseView GetTargetBase() => _targetBase;
 
         private void OnTriggerEnter2D(Collider2D col)
         {

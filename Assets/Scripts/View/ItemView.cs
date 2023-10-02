@@ -25,7 +25,7 @@ namespace GameplaySystem
 
         public CircleCollider2D GetCollider() => _collider;
 
-        public void ChangeSquad(Color color, Squad s)
+        public virtual void ChangeSquad(Color color, Squad s)
         {
             _color = color;
             _icon.color = color;

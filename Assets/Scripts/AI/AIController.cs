@@ -35,13 +35,13 @@ namespace AISystem
 
         public void ActiveState(Squad squad)
         {
-            List<Base> bases = _basesController.GetBases(squad);
+            List<BaseView> bases = _basesController.GetBases(squad);
             int selectCount = Random.Range(0, bases.Count);
 
-            List<Base> playerBases = _basesController.GetBases(Squad.Player);
+            List<BaseView> playerBases = _basesController.GetBases(Squad.Player);
             if (playerBases == null || playerBases.Count <= 0) return;
             int playerNum = Random.Range(0, playerBases.Count - 1);
-            List<Base> selectedBases = new List<Base>();
+            List<BaseView> selectedBases = new List<BaseView>();
             for (int i = 0; i < selectCount; i++)
             {
                 int num = Random.Range(0, bases.Count - 1);
@@ -56,7 +56,7 @@ namespace AISystem
         private AIController _aiController;
 
         public List<BaseData> BasesData = new List<BaseData>();
-        public List<Base> Bases = new List<Base>();
+        public List<BaseView> Bases = new List<BaseView>();
         public Squad CurrentSquad;
 
         private AIState _currentSate;

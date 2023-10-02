@@ -7,7 +7,7 @@ using GameplaySystem;
 
 namespace BaseSystem
 {
-    public class Base : ItemView
+    public class BaseView : ItemView
     {
         [Inject] private ControlModule _control;
         [Inject] private BasesController _basesController;
@@ -92,6 +92,12 @@ namespace BaseSystem
         {
             _countUnits += count;
             UpdateCounter();
+        }
+
+        public override void ChangeSquad(Color color, Squad s)
+        {
+            _basesController.OnChangeBaseSquad?.Invoke(this, s);
+            base.ChangeSquad(color, s);
         }
 
         private void UpdateCounter()
