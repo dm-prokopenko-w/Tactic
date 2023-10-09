@@ -5,6 +5,8 @@ using BaseSystem;
 using Core;
 using Core.ControlSystem;
 using Game.Configs;
+using Core.UI;
+using GameplaySystem.UI;
 
 namespace GameplaySystem
 {
@@ -23,6 +25,8 @@ namespace GameplaySystem
             builder.Register<UnitsManager>(Lifetime.Scoped);
             builder.Register<AIController>(Lifetime.Scoped);
             builder.Register<CameraController>(Lifetime.Scoped);
+
+            builder.Register<UIController>(Lifetime.Scoped);
         }
     }
 }

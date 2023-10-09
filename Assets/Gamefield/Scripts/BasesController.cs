@@ -7,6 +7,7 @@ using VContainer.Unity;
 using VContainer;
 using Game.Configs;
 using System.Threading.Tasks;
+using Game;
 
 namespace BaseSystem
 {
@@ -24,7 +25,7 @@ namespace BaseSystem
 
         public async Task Init(BaseView[] bases, Action<Squad> onChangeSquad)
         {
-            GameData data = await _configLoader.LoadConfig("Configs/GameData", "GameData") as GameData;
+            GameData data = await _configLoader.LoadConfig(GameConstants.ConfigsPath + GameConstants.GameData, GameConstants.GameData) as GameData;
             foreach (var b in bases)
             {
                 var baseData = data.GetDataById(b.Raion);

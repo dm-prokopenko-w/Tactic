@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5213369986733196375}
   - component: {fileID: 4213190825973906473}
   - component: {fileID: 6947783402185781787}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5873584047470334145}
   - component: {fileID: 8547983768760005162}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 1857315178122198383}
   - component: {fileID: 5925184300301008927}
   - component: {fileID: 9216460563795245448}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ MonoBehaviour:
   _collider: {fileID: 9216460563795245448}
   _counter: {fileID: 6947783402185781787}
   _line: {fileID: 2463505580503666082}
-  _data: {fileID: 0}
+  _raion: 0
 --- !u!58 &9216460563795245448
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -335,7 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4713995593337041424}
   - component: {fileID: 2463505580503666082}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}

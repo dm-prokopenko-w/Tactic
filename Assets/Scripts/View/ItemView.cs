@@ -8,7 +8,8 @@ namespace GameplaySystem
         None,
         Player,
         EnemyRed,
-        EnemyGreen
+        EnemyGreen,
+        EnemyYellow
     }
 
     public abstract class ItemView : MonoBehaviour

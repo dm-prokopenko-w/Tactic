@@ -34,7 +34,11 @@ MonoBehaviour:
     ColorSquad: {r: 0.83137256, g: 0.089041315, b: 0.058823522, a: 1}
     Bases:
     - {fileID: 11400000, guid: 04940bb7498995b49a1392b5be884356, type: 2}
-    - {fileID: 11400000, guid: d534859daa0085542b4a7471b9d48104, type: 2}
-    - {fileID: 11400000, guid: 9547e1714f16b834f8eee1b0ef82f842, type: 2}
-    - {fileID: 11400000, guid: c73cc2d3294ad9344b5cded6d7f985ee, type: 2}
-    - {fileID: 11400000, guid: 77bd61af9eff9784893d92e38057e084, type: 2}
+  - CurrentSquad: 3
+    ColorSquad: {r: 0.23679347, g: 0.83137256, b: 0.058823522, a: 1}
+    Bases:
+    - {fileID: 11400000, guid: 04940bb7498995b49a1392b5be884356, type: 2}
+  - CurrentSquad: 4
+    ColorSquad: {r: 0.83137256, g: 0.8049205, b: 0.058823522, a: 1}
+    Bases:
+    - {fileID: 11400000, guid: 04940bb7498995b49a1392b5be884356, type: 2}
