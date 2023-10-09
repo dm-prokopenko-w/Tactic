@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
 using VContainer;
-using Core;
+using Core.ControlSystem;
 using UnityEngine.EventSystems;
 using GameplaySystem;
+using System.Threading.Tasks;
+using Game.Configs;
 
 namespace BaseSystem
 {
@@ -12,22 +14,34 @@ namespace BaseSystem
         [Inject] private ControlModule _control;
         [Inject] private BasesController _basesController;
 
+        public Raions Raion
+        {
+            get
+            {
+                return _raion;
+            }
+            private set
+            {
+                _raion = value;
+            }
+        }
+
         [SerializeField] private TextMeshPro _counter;
         [SerializeField] private LineRenderer _line;
-        [SerializeField] private BaseData _data;
+        [SerializeField] private Raions _raion;
 
         private int _countUnits;
         private bool _isSelected = false;
 
-        public void Init()
+        public void Init(DataBase dataBase)
         {
             Subscribe();
 
             InitLine();
 
-            _countUnits = _data.CountOnStart;
+            _countUnits = dataBase.CountOnStart;
 
-            ChangeSquad(_data.ColorSquad, _data.SquadType);
+            ChangeSquad(dataBase.ColorSquad, dataBase.CurrentSquad);
             UpdateCounter();
         }
 

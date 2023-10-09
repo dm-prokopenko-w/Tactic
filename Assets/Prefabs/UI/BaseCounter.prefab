@@ -320,6 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _counter: {fileID: 1926522195274845256}
+  _icon: {fileID: 1926522195762322528}
 --- !u!1 &1926522195634823370
 GameObject:
   m_ObjectHideFlags: 0

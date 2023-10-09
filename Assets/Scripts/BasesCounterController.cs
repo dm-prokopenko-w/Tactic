@@ -1,7 +1,6 @@
 using Core;
 using GameplaySystem;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
@@ -20,15 +19,17 @@ namespace BaseSystem
         private void Start()
         {
             var bases = _basesController.GetBases(Squad.Player);
-            var counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, Vector3.zero, Quaternion.identity, transform).GetComponent<BaseCounterView>();
+            var counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, transform.localPosition, Quaternion.identity, transform).GetComponent<BaseCounterView>();
+            counterView.InitView(_gameData.BasesPlayer.ColorSquad);
             counterView.name = Squad.Player.ToString();
             var counter = new BaseCounter(Squad.Player, bases.Count, counterView);
             _counters.Add(counter);
 
-            foreach (var enemy in _gameData.Enemy)
+            foreach (var enemy in _gameData.Enemys)
             {
                 bases = _basesController.GetBases(enemy.CurrentSquad);
-                counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, Vector3.zero, Quaternion.identity, transform).GetComponent<BaseCounterView>();
+                counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, transform.localPosition, Quaternion.identity, transform).GetComponent<BaseCounterView>();
+                counterView.InitView(enemy.ColorSquad);
                 counterView.name = enemy.CurrentSquad.ToString();
                 counter = new BaseCounter(enemy.CurrentSquad, bases.Count, counterView);
                 _counters.Add(counter);

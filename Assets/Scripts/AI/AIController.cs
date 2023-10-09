@@ -15,16 +15,16 @@ namespace AISystem
 
         private List<AIEmptyItem> _enemys = new List<AIEmptyItem>();
 
-        public void Init(List<Enemy> enemyData)
+        public void Init(List<ItemData> enemyData)
         {
             foreach (var enemy in enemyData)
             {
                 var item = new AIItem()
                 {
-                    BasesData = new List<BaseData>(enemy.BasesEnemy),
+                    BasesData = new List<BaseData>(enemy.Bases),
                     CurrentSquad = enemy.CurrentSquad,
                 };
-                item.Id = enemy.Id;
+                item.Id = enemy.CurrentSquad.ToString();
 
                 item.Init(this);
                 _enemys.Add(item);

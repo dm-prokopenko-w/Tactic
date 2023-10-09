@@ -1,10 +1,10 @@
 using System;
-using Core;
 using UnityEngine;
 using BaseSystem;
 using UnityEngine.EventSystems;
 using VContainer;
 using AISystem;
+using Core.ControlSystem;
 
 namespace GameplaySystem
 {

@@ -1,16 +1,23 @@
 using Core;
-using Core.UI;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UI;
 using VContainer;
 
 namespace MenuSystem
 {
-    public class ButtonPlay : ButtonListener
+    public class ButtonPlay : MonoBehaviour
     {
         [Inject] private SceneLoader _sceneLoader;
 
-        protected override void OnButtonClick()
+        private void Start()
         {
-            _sceneLoader.LoadNextScene();
+            GetComponent<Button>().onClick.AddListener(() => OnButtonClick());
+        }
+
+        public async Task OnButtonClick()
+        {
+            await _sceneLoader.LoadNextScene();
         }
     }
 }

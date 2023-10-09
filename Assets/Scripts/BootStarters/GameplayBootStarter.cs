@@ -2,6 +2,9 @@ using VContainer;
 using VContainer.Unity;
 using AISystem;
 using BaseSystem;
+using Core;
+using Core.ControlSystem;
+using Game.Configs;
 
 namespace GameplaySystem
 {
@@ -11,6 +14,10 @@ namespace GameplaySystem
         {
             base.Configure(builder);
 
+            builder.Register<ObjectPoolModule>(Lifetime.Scoped);
+            builder.Register<ControlModule>(Lifetime.Scoped);
+            builder.Register<ConfigsLoader>(Lifetime.Scoped);
+            builder.Register<AIModule>(Lifetime.Scoped).As<AIModule, ITickable>();
             builder.Register<GameplayManager>(Lifetime.Scoped);
             builder.Register<BasesController>(Lifetime.Scoped).As<BasesController, ITickable>();
             builder.Register<UnitsManager>(Lifetime.Scoped);
