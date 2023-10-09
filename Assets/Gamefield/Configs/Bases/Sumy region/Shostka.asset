@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6177a838cefa28a449f9b4c3b3173f27, type: 3}
   m_Name: Shostka
   m_EditorClassIdentifier: 
-  Id: Shostka
-  SquadType: 1
-  ColorSquad: {r: 0, g: 0.14117648, b: 1, a: 1}
+  Id: 4
   CountOnStart: 0

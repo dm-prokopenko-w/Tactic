@@ -12,16 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7afa298ddc8a6244884cd6be78f0927a, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
+  Id: GameData
   BasesPlayer:
-  - {fileID: 11400000, guid: 1cb5b78bf8c82ca4088b558944e22eff, type: 2}
-  - {fileID: 11400000, guid: 8939203d211c72e488d598bbd39be6fe, type: 2}
-  - {fileID: 11400000, guid: 7e5fe42b013f2014bb269669ff772b76, type: 2}
-  - {fileID: 11400000, guid: 5c310d0bbcbbd0a42a0c872711e766eb, type: 2}
-  - {fileID: 11400000, guid: 955f2b2b492cc9f42a67f20cb5ef021f, type: 2}
-  Enemy:
-  - Id: EnemyRed
-    CurrentSquad: 2
-    BasesEnemy:
+    CurrentSquad: 1
+    ColorSquad: {r: 0.058823522, g: 0.26874712, b: 0.83137256, a: 1}
+    Bases:
+    - {fileID: 11400000, guid: ee0407251d4f8ce4cb451758e814a3a4, type: 2}
+    - {fileID: 11400000, guid: 5aa71ad877a8e9d4ea112803801fbb37, type: 2}
+    - {fileID: 11400000, guid: 6eb4ad1e8e17ad44492d2b8d58302933, type: 2}
+    - {fileID: 11400000, guid: 4cb4dd5dfa619e040b4ad28f94fef333, type: 2}
+    - {fileID: 11400000, guid: b3c80225a41849042a79d4a3f7d285eb, type: 2}
+    - {fileID: 11400000, guid: b4eebfb1ed7b5f64e8afb9396d48c84c, type: 2}
+    - {fileID: 11400000, guid: 06db7e8ab266946428aa7f21ed725ce7, type: 2}
+    - {fileID: 11400000, guid: 1cb5b78bf8c82ca4088b558944e22eff, type: 2}
+    - {fileID: 11400000, guid: 8939203d211c72e488d598bbd39be6fe, type: 2}
+    - {fileID: 11400000, guid: 7e5fe42b013f2014bb269669ff772b76, type: 2}
+    - {fileID: 11400000, guid: 5c310d0bbcbbd0a42a0c872711e766eb, type: 2}
+    - {fileID: 11400000, guid: 955f2b2b492cc9f42a67f20cb5ef021f, type: 2}
+  Enemys:
+  - CurrentSquad: 2
+    ColorSquad: {r: 0.83137256, g: 0.089041315, b: 0.058823522, a: 1}
+    Bases:
     - {fileID: 11400000, guid: 04940bb7498995b49a1392b5be884356, type: 2}
     - {fileID: 11400000, guid: d534859daa0085542b4a7471b9d48104, type: 2}
     - {fileID: 11400000, guid: 9547e1714f16b834f8eee1b0ef82f842, type: 2}

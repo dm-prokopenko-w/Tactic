@@ -39,7 +39,7 @@ namespace GameplaySystem
             var bases = FindObjectsOfType<BaseView>();
             _basesController.Init(bases, ChangeSquad);
             _unitsManager.Init(_unitPrefab, _parent);
-            _ai.Init(_gameData.Enemy);
+            _ai.Init(_gameData.Enemys);
         }
 
         private void Subscribe()

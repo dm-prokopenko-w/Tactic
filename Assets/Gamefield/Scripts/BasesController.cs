@@ -4,11 +4,16 @@ using UnityEngine;
 using System.Linq;
 using GameplaySystem;
 using VContainer.Unity;
+using VContainer;
+using Game.Configs;
+using System.Threading.Tasks;
 
 namespace BaseSystem
 {
     public class BasesController : ITickable
     {
+        [Inject] private ConfigsLoader _configLoader;
+
         public Action OnUpdateBases;
         public Action<Squad> OnChangeSquad;
         public Action<BaseView, Squad> OnChangeBaseSquad;
@@ -17,11 +22,14 @@ namespace BaseSystem
         private float _currentTime;
         private float _step = 1f;
 
-        public void Init(BaseView[] bases, Action<Squad> onChangeSquad)
+        public async Task Init(BaseView[] bases, Action<Squad> onChangeSquad)
         {
+            GameData data = await _configLoader.LoadConfig("Configs/GameData", "GameData") as GameData;
             foreach (var b in bases)
             {
-                b.Init();
+                var baseData = data.GetDataById(b.Raion);
+                if (baseData == null) continue;
+                b.Init(baseData);
             }
 
             _bases = bases.ToList();

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1103543011506009127}
   - component: {fileID: 8359808982853204353}
   m_Layer: 0
-  m_Name: Krasnohradskyi
+  m_Name: Krasnohrad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6980693173811310110}
   - component: {fileID: 6722608967316663440}
   m_Layer: 0
-  m_Name: Chuhuivskyi
+  m_Name: Chuhuiv
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 8414523030605299013}
   - component: {fileID: 4090309754399390325}
   m_Layer: 0
-  m_Name: Lozivskyi
+  m_Name: Lozova
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 5154646652098008059}
   - component: {fileID: 4881163075359918780}
   m_Layer: 0
-  m_Name: Kharkivskyi
+  m_Name: Kharkiv
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 3932719600242918238}
   - component: {fileID: 1021139907128832228}
   m_Layer: 0
-  m_Name: Kupianskyi
+  m_Name: Kupiansk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 6553224753971082283}
   - component: {fileID: 5983596889213659789}
   m_Layer: 0
-  m_Name: Bohodukhivskyi
+  m_Name: Bohodukhiv
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -559,7 +559,7 @@ GameObject:
   - component: {fileID: 9155135943434706792}
   - component: {fileID: 4514092730253133226}
   m_Layer: 0
-  m_Name: Iziumskyi
+  m_Name: Izium
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -704,6 +704,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 5aa71ad877a8e9d4ea112803801fbb37, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -782,6 +786,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: b4eebfb1ed7b5f64e8afb9396d48c84c, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -864,6 +872,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 06db7e8ab266946428aa7f21ed725ce7, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -946,6 +958,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: b3c80225a41849042a79d4a3f7d285eb, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -1028,6 +1044,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 4cb4dd5dfa619e040b4ad28f94fef333, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -1110,6 +1130,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: ee0407251d4f8ce4cb451758e814a3a4, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -1192,6 +1216,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 6eb4ad1e8e17ad44492d2b8d58302933, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base

@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 7705359826238707685}
   - component: {fileID: 2708679440584079057}
   m_Layer: 0
-  m_Name: 'Okhtyrka '
+  m_Name: Okhtyrka
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -516,6 +516,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 5c310d0bbcbbd0a42a0c872711e766eb, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -586,6 +590,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 8939203d211c72e488d598bbd39be6fe, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -652,6 +660,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 7e5fe42b013f2014bb269669ff772b76, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -718,6 +730,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 1cb5b78bf8c82ca4088b558944e22eff, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
@@ -784,6 +800,10 @@ PrefabInstance:
       propertyPath: _data
       value: 
       objectReference: {fileID: 11400000, guid: 955f2b2b492cc9f42a67f20cb5ef021f, type: 2}
+    - target: {fileID: 5925184300301008927, guid: 19227bd83671cc243acc680342811115, type: 3}
+      propertyPath: _raion
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7186213005732492499, guid: 19227bd83671cc243acc680342811115, type: 3}
       propertyPath: m_Name
       value: Base
