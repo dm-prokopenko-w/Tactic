@@ -16,7 +16,7 @@ namespace GameplaySystem.UI
 
             for (int i = 0; i < countEnemy; i++)
             {
-                var opt = new TMPro.TMP_Dropdown.OptionData()
+                var opt = new TMP_Dropdown.OptionData()
                 {
                     text = (i + 1).ToString()
                 };

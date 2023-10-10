@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core.PopupsSystem;
+using VContainer;
 
-public class LevelGeneratePopup : MonoBehaviour
+namespace Game.Popups
 {
-    // Start is called before the first frame update
-    void Start()
+    public class LevelGeneratePopup : Popup
     {
-        
-    }
+        [Inject] private PopupsModule _popupsModule;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Start()
+        {
+            _popupsModule.AddedBtnClosePopup();
+        }
     }
 }

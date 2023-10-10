@@ -11,9 +11,15 @@ namespace Game.UI
 
         [SerializeField] private TMP_Dropdown _dropdown;
 
-        private void Awake()
+        [Inject]
+        public void Construct()
         {
-            _uiController.AddDropdownItem(UIConstants.SettingsSaveGenerete, _dropdown);
+            _uiController.AddUIItem(new UIItem(UIConstants.SettingsSaveGenerete, _dropdown));
+        }
+
+        private void OnDestroy()
+        {
+            _uiController.RemoveUIItem(UIConstants.SettingsSaveGenerete);
         }
     }
 }

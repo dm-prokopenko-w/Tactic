@@ -17,7 +17,6 @@ namespace MenuSystem
 
             builder.Register<UIController>(Lifetime.Scoped);
             builder.Register<LevelGenerator>(Lifetime.Scoped).As<LevelGenerator, IStartable>();
-
         }
     }
 }

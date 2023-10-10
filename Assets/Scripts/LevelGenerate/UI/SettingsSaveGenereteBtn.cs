@@ -12,9 +12,15 @@ namespace GameplaySystem.UI
 
         [SerializeField] private Button _button;
 
-        private void Awake()
+        [Inject]
+        public void Construct()
         {
-            _uiController.AddButtonItem(UIConstants.SettingsCountEnemy, _button);
+            _uiController.AddUIItem(new UIItem(UIConstants.SettingsCountEnemy, _button));
+        }
+
+        private void OnDestroy()
+        {
+            _uiController.RemoveUIItem(UIConstants.SettingsCountEnemy);
         }
     }
 }

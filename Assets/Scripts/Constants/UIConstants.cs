@@ -7,6 +7,6 @@ namespace Game
     {
         public const string SettingsCountEnemy = "SettingsCountEnemy";
         public const string SettingsSaveGenerete = "SettingsSaveGenerete";
-
+        public const string ShowPopupByID = "ShowPopupByID";
     }
 }

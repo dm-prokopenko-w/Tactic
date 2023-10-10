@@ -25,7 +25,7 @@ namespace BaseSystem
 
         public async Task Init(BaseView[] bases, Action<Squad> onChangeSquad)
         {
-            GameData data = await _configLoader.LoadConfig(GameConstants.ConfigsPath + GameConstants.GameData, GameConstants.GameData) as GameData;
+            GameData data = await _configLoader.LoadConfig(GameConstants.GameData) as GameData;
             foreach (var b in bases)
             {
                 var baseData = data.GetDataById(b.Raion);

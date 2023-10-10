@@ -2,10 +2,8 @@ using Core.UI;
 using Game;
 using VContainer;
 using VContainer.Unity;
-using UnityEngine;
 using Game.Configs;
 using System.Threading.Tasks;
-using Core;
 using Game.Core;
 
 namespace GameplaySystem.UI
@@ -20,7 +18,6 @@ namespace GameplaySystem.UI
 
         private LevelSettings _currentSave = new LevelSettings();
 
-
         public void Start()
         {
             _ = Init();
@@ -28,7 +25,7 @@ namespace GameplaySystem.UI
 
         private async Task Init()
         {
-            GameData data = await _configsLoader.LoadConfig(GameConstants.ConfigsPath + GameConstants.GameData, GameConstants.GameData) as GameData;
+            GameData data = await _configsLoader.LoadConfig(GameConstants.GameData) as GameData;
             
             InitChangeCountEnemys(data.Enemys.Count);
             InitSaveGenereteBtn();
@@ -43,7 +40,7 @@ namespace GameplaySystem.UI
 
         private void InitSaveGenereteBtn()
         {
-            var btn = _uiController.GetDropdownById(UIConstants.SettingsSaveGenerete);
+            var btn = _uiController.GetButtonById(UIConstants.SettingsSaveGenerete);
             if (btn == null) return;
             _saveLoader.Save(LevelSettingsKey, _currentSave);
         }
@@ -52,6 +49,5 @@ namespace GameplaySystem.UI
     public class LevelSettings
     {
         public int CountEnemys;
-
     }
 }
