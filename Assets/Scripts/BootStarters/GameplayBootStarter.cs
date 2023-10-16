@@ -4,8 +4,7 @@ using AISystem;
 using BaseSystem;
 using Core;
 using Core.ControlSystem;
-using Game.Configs;
-using Core.UI;
+using Game;
 
 namespace GameplaySystem
 {
@@ -17,7 +16,7 @@ namespace GameplaySystem
 
             builder.Register<ObjectPoolModule>(Lifetime.Scoped);
             builder.Register<ControlModule>(Lifetime.Scoped);
-            builder.Register<ConfigsLoader>(Lifetime.Scoped);
+            builder.Register<AssetLoader>(Lifetime.Scoped);
             builder.Register<AIModule>(Lifetime.Scoped).As<AIModule, ITickable>();
             builder.Register<GameplayManager>(Lifetime.Scoped);
             builder.Register<BasesController>(Lifetime.Scoped).As<BasesController, ITickable>();

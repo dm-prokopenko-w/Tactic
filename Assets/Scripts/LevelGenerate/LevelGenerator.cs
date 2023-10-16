@@ -1,7 +1,6 @@
 using Core.UI;
 using VContainer;
 using VContainer.Unity;
-using Game.Configs;
 using System.Threading.Tasks;
 using Game.Core;
 using GameplaySystem;
@@ -11,7 +10,7 @@ namespace Game.LevelGenerator
     public class LevelGenerator : IStartable
     {
         [Inject] private UIController _uiController;
-        [Inject] private ConfigsLoader _configsLoader;
+        [Inject] private AssetLoader _assetLoader;
         [Inject] private SaveModule _saveModule;
 
         private LevelSettings _currentSave;
@@ -30,7 +29,7 @@ namespace Game.LevelGenerator
 
         private async Task InitCountEnemys()
         {
-            GameData data = await _configsLoader.LoadConfig(GameConstants.GameData) as GameData;
+            GameData data = await _assetLoader.LoadConfig(GameConstants.GameData) as GameData;
             _countEnemy = data.Enemys.Count;
         }
 

@@ -1,5 +1,4 @@
-using Core.UI;
-using Game.Configs;
+using Game;
 using Game.LevelGenerator;
 using VContainer;
 using VContainer.Unity;
@@ -13,7 +12,7 @@ namespace MenuSystem
             base.Configure(builder);
 
             builder.Register<MenuController>(Lifetime.Scoped);
-            builder.Register<ConfigsLoader>(Lifetime.Scoped);
+            builder.Register<AssetLoader>(Lifetime.Scoped);
 
             builder.Register<LevelGenerator>(Lifetime.Scoped).As<LevelGenerator, IStartable>();
         }

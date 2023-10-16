@@ -5,7 +5,6 @@ using System.Linq;
 using GameplaySystem;
 using VContainer.Unity;
 using VContainer;
-using Game.Configs;
 using System.Threading.Tasks;
 using Game;
 
@@ -13,7 +12,7 @@ namespace BaseSystem
 {
     public class BasesController : ITickable
     {
-        [Inject] private ConfigsLoader _configLoader;
+        [Inject] private AssetLoader _assetLoader;
 
         public Action OnUpdateBases;
         public Action<Squad> OnChangeSquad;
@@ -25,7 +24,7 @@ namespace BaseSystem
 
         public async Task Init(BaseView[] bases, Action<Squad> onChangeSquad)
         {
-            GameData data = await _configLoader.LoadConfig(GameConstants.GameData) as GameData;
+            GameData data = await _assetLoader.LoadConfig(GameConstants.GameData) as GameData;
             foreach (var b in bases)
             {
                 var baseData = data.GetDataById(b.Raion);
