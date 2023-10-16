@@ -1,39 +1,53 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using GameplaySystem;
 using VContainer.Unity;
 using VContainer;
 using System.Threading.Tasks;
 using Game;
+using Core.ControlSystem;
 
 namespace BaseSystem
 {
     public class BasesController : ITickable
     {
         [Inject] private AssetLoader _assetLoader;
+        [Inject] private ControlModule _control;
 
         public Action OnUpdateBases;
         public Action<Squad> OnChangeSquad;
-        public Action<BaseView, Squad> OnChangeBaseSquad;
+        public Action<BaseItem, Squad> OnChangeBaseSquad;
+        public Action OnInit;
 
-        private List<BaseView> _bases = new List<BaseView>();
+        private List<BaseItem> _bases = new List<BaseItem>();
         private float _currentTime;
         private float _step = 1f;
 
-        public async Task Init(BaseView[] bases, Action<Squad> onChangeSquad)
+        public async Task Init(Action<Squad> onChangeSquad)
         {
             GameData data = await _assetLoader.LoadConfig(GameConstants.GameData) as GameData;
-            foreach (var b in bases)
+            foreach (var b in _bases)
             {
                 var baseData = data.GetDataById(b.Raion);
                 if (baseData == null) continue;
                 b.Init(baseData);
             }
 
-            _bases = bases.ToList();
             OnChangeSquad = onChangeSquad;
+            OnInit?.Invoke();
+        }
+
+        public void AddBase(BaseView view)
+        {
+            var item = new BaseItem(view, OnChangeBaseSquad);
+            OnUpdateBases += item.UpdateCounter;
+
+            _control.TouchStart += item.SelectBase;
+            _control.TouchMoved += item.SelectBase;
+            _control.TouchEnd += item.End;
+
+            _bases.Add(item);
         }
 
         public void SelectedBase(RaycastHit2D hit, Squad squad)
@@ -44,16 +58,16 @@ namespace BaseSystem
             {
                 if (OnChangeSquad != null)
                 {
-                    OnChangeSquad.Invoke(b.GetSquad());
+                    OnChangeSquad.Invoke(b.CurrentSquad);
                 }
             }
 
-            if (squad != b.GetSquad() || b.IsSelectedBase()) return;
+            if (squad != b.CurrentSquad || b.IsSelectedBase()) return;
 
             b.SelectedBase(true);
         }
 
-        public List<BaseView> GetBases(Squad squad) => _bases.FindAll(x => x.GetSquad() == squad);
+        public List<BaseItem> GetBases(Squad squad) => _bases.FindAll(x => x.CurrentSquad == squad);
 
         public void Tick()
         {
@@ -82,9 +96,9 @@ namespace BaseSystem
             }
         }
 
-        public (BaseView, List<BaseView>) GetBasesForCreateUnits(Collider2D col)
+        public (BaseItem, List<BaseItem>) GetBasesForCreateUnits(Collider2D col)
         {
-            BaseView targetBase = _bases.Find(x => x.GetCollider() == col);
+            var targetBase = _bases.Find(x => x.GetCollider() == col);
             var selectedBase = _bases.FindAll(x => x.IsSelectedBase());
             selectedBase.Remove(targetBase);
             return (targetBase, selectedBase);

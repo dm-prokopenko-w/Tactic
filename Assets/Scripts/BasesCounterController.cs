@@ -19,9 +19,20 @@ namespace BaseSystem
         [SerializeField] private BaseCounterView _baseCounterPrefab;
 
         private List<BaseCounter> _counters = new List<BaseCounter>();
+        private bool _isInit = false;
 
-        private void Start()
+        [Inject]
+        public void Construct()
         {
+            _basesController.OnInit += Init;
+            _basesController.OnChangeBaseSquad += ChangeBaseSquad;
+        }
+
+        private void Init()
+        {
+            _basesController.OnInit -= Init;
+            _isInit = true;
+
             var bases = _basesController.GetBases(Squad.Player);
             var counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, transform.localPosition, Quaternion.identity, transform).GetComponent<BaseCounterView>();
             counterView.InitView(_gameData.BasesPlayer.ColorSquad);
@@ -30,7 +41,7 @@ namespace BaseSystem
             _counters.Add(counter);
 
             var save = _saveModule.Load<LevelSettings>(GameConstants.LevelSettingsKey);
-            
+
             for (int i = 0; i < save.CountEnemys; i++)
             {
                 var enemy = _gameData.Enemys[i];
@@ -41,8 +52,6 @@ namespace BaseSystem
                 counter = new BaseCounter(enemy.CurrentSquad, bases.Count, counterView);
                 _counters.Add(counter);
             }
-
-            _basesController.OnChangeBaseSquad += ChangeBaseSquad;
         }
 
         private void OnDestroy()
@@ -50,9 +59,12 @@ namespace BaseSystem
             _basesController.OnChangeBaseSquad -= ChangeBaseSquad;
         }
 
-        private void ChangeBaseSquad(BaseView b, Squad s)
+        private void ChangeBaseSquad(BaseItem b, Squad s)
         {
-            var oldSquad = _counters.Find(x => x.CurrentSquad == b.GetSquad());
+            if (!_isInit) return;
+
+            var oldSquad = _counters.Find(x => x.CurrentSquad == b.CurrentSquad);
+
             if (oldSquad != null)
             {
                 oldSquad.Count--;
@@ -60,6 +72,7 @@ namespace BaseSystem
             }
 
             var newSquad = _counters.Find(x => x.CurrentSquad == s);
+
             if (newSquad != null)
             {
                 newSquad.Count++;

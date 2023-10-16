@@ -15,7 +15,7 @@ namespace GameplaySystem
 
         public void CreateUnits(RaycastHit2D hit, Squad squad)
         {
-            (BaseView targetBase, List<BaseView> selectedBases) = _basesController.GetBasesForCreateUnits(hit.collider);
+            (BaseItem targetBase, List<BaseItem> selectedBases) = _basesController.GetBasesForCreateUnits(hit.collider);
             _unitsManager.CreateUnits(selectedBases, targetBase);
         }
     }

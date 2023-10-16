@@ -15,6 +15,7 @@ namespace BaseSystem
 
         private void Start()
         {
+            return;
             float angle = Mathf.PI / 2;// * 2;// / numberOfObjects;
             float angleStep = Mathf.PI / 4 - Mathf.PI / 2;
             for (int i = 0; i < numberOfObjects; i++)

@@ -7,21 +7,21 @@ namespace UnitSystem
 {
     public class UnitView : ItemView
     {
-        private BaseView _targetBase;
+        private BaseItem _targetBase;
         private Vector3 _target;
         private float _speed = 5f;
         private Action<UnitView> OnTrigger;
 
-        public void SetTarget(BaseView target, BaseView startBase, Action<UnitView> onTrigger)
+        public void SetTarget(BaseItem startBase, BaseItem target, Action<UnitView> onTrigger)
         {
-            _squadItem = startBase.GetSquad();
+            _squadItem = startBase.CurrentSquad;
             _targetBase = target;
-            _target = target.transform.position;
-            ChangeSquad(startBase.GetColor(), startBase.GetSquad());
+            _target = target.GetBasePos();
+            ChangeSquad(startBase.CurrentColor, startBase.CurrentSquad);
             OnTrigger = onTrigger;
         }
 
-        public BaseView GetTargetBase() => _targetBase;
+        public BaseItem GetTargetBase() => _targetBase;
 
         private void OnTriggerEnter2D(Collider2D col)
         {

@@ -35,13 +35,14 @@ namespace AISystem
 
         public void ActiveState(Squad squad)
         {
-            List<BaseView> bases = _basesController.GetBases(squad);
+            var bases = _basesController.GetBases(squad);
             int selectCount = Random.Range(0, bases.Count);
 
-            List<BaseView> playerBases = _basesController.GetBases(Squad.Player);
+            var playerBases = _basesController.GetBases(Squad.Player);
             if (playerBases == null || playerBases.Count <= 0) return;
             int playerNum = Random.Range(0, playerBases.Count - 1);
-            List<BaseView> selectedBases = new List<BaseView>();
+
+            List<BaseItem> selectedBases = new();
             for (int i = 0; i < selectCount; i++)
             {
                 int num = Random.Range(0, bases.Count - 1);
