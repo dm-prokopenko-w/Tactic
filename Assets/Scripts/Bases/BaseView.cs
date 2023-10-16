@@ -4,8 +4,6 @@ using VContainer;
 using Core.ControlSystem;
 using UnityEngine.EventSystems;
 using GameplaySystem;
-using System.Threading.Tasks;
-using Game.Configs;
 
 namespace BaseSystem
 {

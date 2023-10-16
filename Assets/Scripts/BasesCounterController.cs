@@ -1,4 +1,7 @@
 using Core;
+using Game;
+using Game.Core;
+using Game.LevelGenerator;
 using GameplaySystem;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +13,7 @@ namespace BaseSystem
     {
         [Inject] private BasesController _basesController;
         [Inject] private ObjectPoolModule _poolModule;
+        [Inject] private SaveModule _saveModule;
 
         [SerializeField] private GameData _gameData;
         [SerializeField] private BaseCounterView _baseCounterPrefab;
@@ -25,8 +29,11 @@ namespace BaseSystem
             var counter = new BaseCounter(Squad.Player, bases.Count, counterView);
             _counters.Add(counter);
 
-            foreach (var enemy in _gameData.Enemys)
+            var save = _saveModule.Load<LevelSettings>(GameConstants.LevelSettingsKey);
+            
+            for (int i = 0; i < save.CountEnemys; i++)
             {
+                var enemy = _gameData.Enemys[i];
                 bases = _basesController.GetBases(enemy.CurrentSquad);
                 counterView = _poolModule.Spawn(_baseCounterPrefab.gameObject, transform.localPosition, Quaternion.identity, transform).GetComponent<BaseCounterView>();
                 counterView.InitView(enemy.ColorSquad);

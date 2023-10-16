@@ -1,6 +1,6 @@
 using TMPro;
 
-namespace GameplaySystem.UI
+namespace Game.LevelGenerator
 {
     public class ChangeCountEnemys
     {
@@ -10,9 +10,9 @@ namespace GameplaySystem.UI
         {
             _save = save;
             drop.ClearOptions();
-            drop.AddOptions(new System.Collections.Generic.List<TMPro.TMP_Dropdown.OptionData>());
+            drop.AddOptions(new System.Collections.Generic.List<TMP_Dropdown.OptionData>());
 
-            var options = new System.Collections.Generic.List<TMPro.TMP_Dropdown.OptionData>();
+            var options = new System.Collections.Generic.List<TMP_Dropdown.OptionData>();
 
             for (int i = 0; i < countEnemy; i++)
             {
@@ -26,6 +26,16 @@ namespace GameplaySystem.UI
 
             drop.AddOptions(options);
             drop.onValueChanged.AddListener(ChangeCount);
+
+            if (_save.CountEnemys == 0)
+            {
+                ChangeCount(0);
+                drop.value = 0;
+            }
+            else
+            {
+                drop.value = _save.CountEnemys - 1;
+            }
         }
 
         private void ChangeCount(int countEnemys)

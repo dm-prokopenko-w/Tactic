@@ -1,34 +1,43 @@
 using Core.UI;
-using Game;
 using VContainer;
 using VContainer.Unity;
 using Game.Configs;
 using System.Threading.Tasks;
 using Game.Core;
+using GameplaySystem;
 
-namespace GameplaySystem.UI
+namespace Game.LevelGenerator
 {
     public class LevelGenerator : IStartable
     {
         [Inject] private UIController _uiController;
         [Inject] private ConfigsLoader _configsLoader;
-        [Inject] private SaveModule _saveLoader;
+        [Inject] private SaveModule _saveModule;
 
-        private const string LevelSettingsKey = "LevelSettings";
-
-        private LevelSettings _currentSave = new LevelSettings();
+        private LevelSettings _currentSave;
+        private int _countEnemy;
 
         public void Start()
         {
-            _ = Init();
+            _ = InitCountEnemys();
+            _currentSave = _saveModule.Load<LevelSettings>(GameConstants.LevelSettingsKey);
+
+            if (_currentSave == null)
+            {
+                _currentSave = new LevelSettings();
+            }
         }
 
-        private async Task Init()
+        private async Task InitCountEnemys()
         {
             GameData data = await _configsLoader.LoadConfig(GameConstants.GameData) as GameData;
-            
-            InitChangeCountEnemys(data.Enemys.Count);
-            InitSaveGenereteBtn();
+            _countEnemy = data.Enemys.Count;
+        }
+
+        public void Init()
+        {
+            InitChangeCountEnemys(_countEnemy);
+            _uiController.SetFuncById(UIConstants.SettingsSaveGenerete, SaveGenerete);
         }
 
         private void InitChangeCountEnemys(int countEnemy)
@@ -38,16 +47,9 @@ namespace GameplaySystem.UI
             new ChangeCountEnemys().Init(_currentSave, countEnemy, drop);
         }
 
-        private void InitSaveGenereteBtn()
+        private void SaveGenerete()
         {
-            var btn = _uiController.GetButtonById(UIConstants.SettingsSaveGenerete);
-            if (btn == null) return;
-            _saveLoader.Save(LevelSettingsKey, _currentSave);
+            _saveModule.Save(GameConstants.LevelSettingsKey, _currentSave);
         }
-    }
-
-    public class LevelSettings
-    {
-        public int CountEnemys;
     }
 }

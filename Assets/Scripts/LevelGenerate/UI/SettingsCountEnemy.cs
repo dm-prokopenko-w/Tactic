@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using VContainer;
 
-namespace Game.UI
+namespace Game.LevelGenerator
 {
     public class SettingsCountEnemy : MonoBehaviour
     {
@@ -14,12 +14,12 @@ namespace Game.UI
         [Inject]
         public void Construct()
         {
-            _uiController.AddUIItem(new UIItem(UIConstants.SettingsSaveGenerete, _dropdown));
+            _uiController.AddUIItem(new UIItem(UIConstants.SettingsCountEnemy, _dropdown));
         }
 
         private void OnDestroy()
         {
-            _uiController.RemoveUIItem(UIConstants.SettingsSaveGenerete);
+            _uiController.RemoveUIItem(UIConstants.SettingsCountEnemy);
         }
     }
 }

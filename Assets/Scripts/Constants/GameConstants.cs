@@ -9,5 +9,7 @@ namespace Game
         public const string ConfigsPath = "Configs/";
 
         public const string GameData = "GameData";
+
+        public const string LevelSettingsKey = "LevelSettings";
     }
 }

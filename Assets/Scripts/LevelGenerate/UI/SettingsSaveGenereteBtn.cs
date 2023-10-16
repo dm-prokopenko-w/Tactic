@@ -1,10 +1,9 @@
 using Core.UI;
-using Game;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
-namespace GameplaySystem.UI
+namespace Game.LevelGenerator
 {
     public class SettingsSaveGenereteBtn : MonoBehaviour
     {
@@ -15,12 +14,12 @@ namespace GameplaySystem.UI
         [Inject]
         public void Construct()
         {
-            _uiController.AddUIItem(new UIItem(UIConstants.SettingsCountEnemy, _button));
+            _uiController.AddUIItem(new UIItem(UIConstants.SettingsSaveGenerete, _button));
         }
 
         private void OnDestroy()
         {
-            _uiController.RemoveUIItem(UIConstants.SettingsCountEnemy);
+            _uiController.RemoveUIItem(UIConstants.SettingsSaveGenerete);
         }
     }
 }
