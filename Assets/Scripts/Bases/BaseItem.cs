@@ -1,3 +1,4 @@
+using Game.Popups;
 using GameplaySystem;
 using System;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace BaseSystem
                 _squadItem = value;
             }
         }
+        
+        private Squad _squadItem;
 
         public Color CurrentColor
         {
@@ -31,14 +34,27 @@ namespace BaseSystem
             }
         }
 
-        private IBaseEmpty _base;
+        private Color _color;
+
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+            }
+        }
+
+        private bool _isSelected = false;
+
+        private BaseEmpty _base;
         private BaseView _view;
         private int _countUnits;
-        private bool _isSelected = false;
         private Action<BaseItem, Squad> _onChangeBaseSquad;
 
-        private Squad _squadItem;
-        private Color _color;
 
         public BaseItem(BaseView view, Action<BaseItem, Squad> onChangeBaseSquad)
         {
@@ -48,10 +64,6 @@ namespace BaseSystem
 
         public Collider2D GetCollider() => _view.GetCollider();
 
-        public void SelectedBase(bool value) => _isSelected = value;
-
-        public bool IsSelectedBase() => _isSelected;
-
         public Raions Raion => _view.Raion;
 
         public void Init(DataBase dataBase)
@@ -60,6 +72,35 @@ namespace BaseSystem
             _countUnits = dataBase.CountOnStart;
             ChangeSquad(dataBase.ColorSquad, dataBase.CurrentSquad);
             _view.UpdateCounter(_countUnits);
+            InitBaseType();
+        }
+
+        public void InitBaseType(BaseType type = BaseType.Barracks)
+        {
+            if (_base != null)
+            {
+                _base.OnUpdateBases -= UpdateCounter;
+            }
+
+            switch (type)
+            {
+                case BaseType.Barracks:
+                    _base = new BarrackBase();
+                    break;
+                /*
+                case BaseType.Factory:
+                    _base = new FactoryBase();
+                    break;
+                case BaseType.Castle:
+                    _base = new CastleBase();
+                    break;
+                */
+                default:
+                    _base = new CityBase();
+                    break;
+            }
+
+            _base.OnUpdateBases += UpdateCounter;
         }
 
         public int GetMovedCountUnits()
@@ -88,13 +129,20 @@ namespace BaseSystem
             _view.ChangeColorSquad(color);
         }
 
+        public void ClickOnBase() => _view.ClickOnBase();
+
         public void UpdateCounter()
         {
             _countUnits++;
             _view.UpdateCounter(_countUnits);
         }
 
-        public Color GetColor() => _color;
+        public void UpdateBase()
+        {
+            if (_base == null) return;
+
+            _base.UpdatePower();
+        }
 
         public void SelectBase(PointerEventData data)
         {
@@ -103,30 +151,46 @@ namespace BaseSystem
             _view.SetLine(new Vector3(p.x, p.y, _view.gameObject.transform.position.z));
         }
 
-        public void End(PointerEventData data)  => _view.SetLine(_view.gameObject.transform.position);
+        public void End(PointerEventData data) => _view.SetLine(_view.gameObject.transform.position);
     }
 
-    public interface IBaseEmpty
+    public abstract class BaseEmpty
     {
-
-    }
-    public class CityBase : IBaseEmpty
-    {
-
+        public Action OnUpdateBases;
+        public virtual void UpdatePower() { }
     }
 
-    public class BarrackBase : IBaseEmpty
-    {
-
-    }
-
-    public class CastleBase : IBaseEmpty
+    public class CityBase : BaseEmpty
     {
 
     }
 
-    public class FactoryBase : IBaseEmpty
+    public class BarrackBase : BaseEmpty
     {
+        private float _currentTime;
+        private float _step = 1f;
 
+        public override void UpdatePower()
+        {
+            _currentTime += Time.deltaTime;
+
+            if (_currentTime > _step)
+            {
+                OnUpdateBases?.Invoke();
+                _currentTime = 0;
+            }
+        }
     }
+    /*
+
+public class CastleBase : IBaseEmpty
+{
+
+}
+
+public class FactoryBase : IBaseEmpty
+{
+
+}
+    */
 }

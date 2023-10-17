@@ -24,6 +24,7 @@ namespace BaseSystem
         [SerializeField] private TextMeshPro _counter;
         [SerializeField] private LineRenderer _line;
         [SerializeField] private Raions _raion;
+        [SerializeField] private BaseSelecterType _baseSelecter;
 
         [Inject]
         public void Construct()
@@ -41,5 +42,10 @@ namespace BaseSystem
         public void SetLine(Vector3 pos) => _line.SetPosition(1, pos);
 
         public void UpdateCounter(int count) => _counter.text = count.ToString();
+
+        public void ClickOnBase()
+        {
+            _baseSelecter.ActiveButtons();
+        }
     }
 }

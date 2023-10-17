@@ -11,7 +11,6 @@ namespace GameplaySystem
     public class GameplayController : MonoBehaviour
     {
         [Inject] private ControlModule _control;
-
         [Inject] private GameplayManager _gameplay;
         [Inject] private BasesController _basesController;
         [Inject] private UnitsManager _unitsManager;
@@ -58,7 +57,13 @@ namespace GameplaySystem
         private void TouchStart(PointerEventData eventData)
         {
             _isHitBase = true;
-            ThrowRay(eventData, _basesController.SelectedBase, () => _isHitBase = false);
+            ThrowRay(eventData, TouchStart, () => _isHitBase = false);
+        }
+
+        private void TouchStart(RaycastHit2D hit, Squad squad)
+        {
+            _basesController.SelectedBase(hit, squad);
+            _basesController.StartClickOnBase(hit, squad);
         }
 
         private void TouchMoved(PointerEventData eventData)
@@ -76,7 +81,13 @@ namespace GameplaySystem
         private void TouchEnd(PointerEventData eventData)
         {
             _isHitBase = false;
-            ThrowRay(eventData, _gameplay.CreateUnits, _basesController.UnSelectedBases);
+            ThrowRay(eventData, TouchEnd, _basesController.UnSelectedBases);
+        }
+
+        private void TouchEnd(RaycastHit2D hit, Squad squad)
+        {
+            _gameplay.CreateUnits(hit, squad);
+            _basesController.EndClickOnBase(hit, squad);
         }
 
         private void ThrowRay(PointerEventData eventData, Action<RaycastHit2D, Squad> method, Action missed = null)

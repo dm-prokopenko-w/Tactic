@@ -21,8 +21,7 @@ namespace BaseSystem
         public Action OnInit;
 
         private List<BaseItem> _bases = new List<BaseItem>();
-        private float _currentTime;
-        private float _step = 1f;
+        private BaseItem _clickBase;
 
         public async Task Init(Action<Squad> onChangeSquad)
         {
@@ -41,7 +40,7 @@ namespace BaseSystem
         public void AddBase(BaseView view)
         {
             var item = new BaseItem(view, OnChangeBaseSquad);
-            OnUpdateBases += item.UpdateCounter;
+            OnUpdateBases += item.UpdateBase;
 
             _control.TouchStart += item.SelectBase;
             _control.TouchMoved += item.SelectBase;
@@ -62,22 +61,35 @@ namespace BaseSystem
                 }
             }
 
-            if (squad != b.CurrentSquad || b.IsSelectedBase()) return;
+            if (squad != b.CurrentSquad || b.IsSelected) return;
 
-            b.SelectedBase(true);
+            b.IsSelected = true;
+        }
+
+        public void StartClickOnBase(RaycastHit2D hit, Squad squad)
+        {
+            var b = _bases.Find(x => x.GetCollider() == hit.collider);
+            if (b == null) return;
+            if (squad != b.CurrentSquad) return;
+            _clickBase = b;
+        }
+
+        public void EndClickOnBase(RaycastHit2D hit, Squad squad)
+        {
+            var b = _bases.Find(x => x.GetCollider() == hit.collider);
+            if (b == null) return;
+            if (squad != b.CurrentSquad) return;
+            if (_clickBase != b) return;
+
+            _clickBase = null;
+            b.ClickOnBase();
         }
 
         public List<BaseItem> GetBases(Squad squad) => _bases.FindAll(x => x.CurrentSquad == squad);
 
         public void Tick()
         {
-            _currentTime += Time.deltaTime;
-
-            if (_currentTime > _step)
-            {
-                OnUpdateBases?.Invoke();
-                _currentTime = 0;
-            }
+            OnUpdateBases?.Invoke();
         }
 
         public void UnSelectedBases()
@@ -86,7 +98,7 @@ namespace BaseSystem
             {
                 foreach (var b in _bases)
                 {
-                    b.SelectedBase(false);
+                    b.IsSelected = false;
                 }
             }
 
@@ -99,7 +111,7 @@ namespace BaseSystem
         public (BaseItem, List<BaseItem>) GetBasesForCreateUnits(Collider2D col)
         {
             var targetBase = _bases.Find(x => x.GetCollider() == col);
-            var selectedBase = _bases.FindAll(x => x.IsSelectedBase());
+            var selectedBase = _bases.FindAll(x => x.IsSelected);
             selectedBase.Remove(targetBase);
             return (targetBase, selectedBase);
         }

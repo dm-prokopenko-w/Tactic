@@ -34,10 +34,10 @@ namespace GameplaySystem
                     unitScript.SetTarget(b, targetBase, OnTriggerWithBase);
                 }
 
-                b.SelectedBase(false);
+                b.IsSelected = false;
             }
 
-            targetBase.SelectedBase(false);
+            targetBase.IsSelected = false;
         }
 
         private void OnTriggerWithBase(UnitView unit)
